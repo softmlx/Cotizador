@@ -1,0 +1,69 @@
+﻿<div class="modal fade" id="insUsuarios" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" data-backdrop="static">
+    <form id="frmNewUser" method="post" action="Insert">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close cerrar" data-dissmiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Registro de Usuario</h4>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label>Nombre de Usuario</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <span class="input-group-text">&commat;</span>
+                                </div>
+                                <input type="text" placeholder="Nombre de Usuario" class="form-control" name="UserName">
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <label>Teléfono Celular</label>
+                            <input type="text" class="form-control" placeholder="Teléfono Celular" name="PhoneNumber">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label>Email</label>
+                            <input type="email" class="form-control" placeholder="Email" name="Email">
+                        </div>
+                        <div class="col-lg-6">
+                            <label>Confirma Email</label>
+                            <input type="email" class="form-control" placeholder="Confirma Email">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label>Contraseña</label>
+                            <input type="password" class="form-control" placeholder="Contraseña" name="PasswordHash">
+                        </div>
+                        <div class="col-lg-6">
+                            <label>Confirmar Contraseña</label>
+                            <input type="password" class="form-control" placeholder="Confirma Contraseña">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label>Información Adicional</label>
+                            <input type="text" class="form-control" placeholder="Información Adicional" name="AdditionalInfo">
+                        </div>
+                        <div class="col-lg-6">
+                            <label>Tipos de Roles</label>
+                            @foreach (var item in ViewBag.List)
+                            {
+                                <input type="checkbox" name="ids" value="@item.BitRoleId" class="checkbox">@item.Name
+                                <br/>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default cerrar" data-dissmiss="modal" aria-label="Close">Cancelar</button>
+                    <button type="button" class="btn btn-success" id="btnGuardar">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+

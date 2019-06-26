@@ -1,0 +1,32 @@
+﻿<div class="modal fade" id="updUsuario" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" data-backdrop="static">
+    <form id="frmUpdUser" method="post" action="Update">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close cerrarUpd" data-dissmiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Actualización de Datos</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="UpdRowUsuario">
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label>Tipos de Roles</label>
+                            @foreach (var item in ViewBag.List)
+                            {
+                                <input type="checkbox" name="ids" id="@item.BitRoleId" value="@item.BitRoleId" class="checkbox">@item.Name<br />
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-lg-12" style="padding:20px;">
+                        <button type="button" class="btn btn-default cerrarUpd" data-dissmiss="modal" aria-label="Close">Cancelar</button>
+                        <button type="button" class="btn btn-success" id="btnActualizar">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+

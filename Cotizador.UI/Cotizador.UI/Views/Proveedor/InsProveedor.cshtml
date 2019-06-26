@@ -1,0 +1,247 @@
+﻿<div class="modal fade" id="insProveedor" tabindex="-1" role="dialog" aria-labelledby="clienteModalLabel" data-backdrop="static">
+    <form id="frmNewCliente" method="post" action="Insert">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close cerrar" data-dissmiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Registro de Cliente</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="wizards">
+                        <div class="progressbar">
+                            <div class="progress-line" data-now-value="12.11" data-number-of-steps="3" style="width: 12.11%;"></div>
+                        </div>
+                        <div class="form-wizard active">
+                            <div class="wizard-icon"><i class="fa fa-user"></i></div>
+                            <p>Información Personal</p>
+                        </div>
+                        <div class="form-wizard">
+                            <div class="wizard-icon"><i class="fa fa-address-card"></i></div>
+                            <p>Contactos</p>
+                        </div>
+                        <div class="form-wizard">
+                            <div class="wizard-icon"><i class="fa fa-university"></i></div>
+                            <p>Datos Fiscales</p>
+                        </div>
+                    </div>
+                    <fieldset id="formCliente">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <label>Nombre de Proveedor</label>
+                                <input type="text" placeholder="Nombre" required="required" class="form-control" name="Nombre">
+                                
+                            </div>
+                            <div class="col-lg-3">
+                                <label>Estatus</label>
+                                <input type="checkbox" class="custom-checkbox" required="required" placeholder="Estatus" name="Estatus">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <label>Calle</label>
+                                <input type="text" class="form-control" required="required" placeholder="Calle" name="Calle">
+                            </div>
+                            <div class="col-lg-3">
+                                <label>Número Exterior</label>
+                                <input type="text" class="form-control" required="required" placeholder="Numero Exterior" name="NumeroExterior">
+                            </div>
+                            <div class="col-lg-3">
+                                <label>Número Interior</label>
+                                <input type="text" class="form-control" required="required" placeholder="Numero Interior" name="NumeroInterior">
+                            </div>
+                            <div class="col-lg-3">
+                                <label>Código Postal</label>
+                                <input type="text" class="form-control" required="required" placeholder="Código Postal" name="CodigoPostal">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <label>Colonia</label>
+                                <input type="text" class="form-control" required="required" placeholder="Colonia" name="Colonia">
+                            </div>
+                            <div class="col-lg-6">
+                                <label>Ciudad</label>
+                                <input type="text" class="form-control" required="required" placeholder="Ciudad" name="Ciudad">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <label>País</label>
+                                <select name="PaiId" class="col-lg-12 form-control" id="comboboxPais">
+                                    <option value="-1">Selecciona el país</option>
+                                    @foreach (var item in ViewBag.List)
+                                    {
+                                        <option value="@item.PaiId">@item.Nombre</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-lg-4">
+                                <label>Estado</label>
+                                <select name="EstadoId" class="col-lg-12 form-control" id="comboboxEstado">
+                                    <!--
+                                        +----------------------+
+                                        |Información de Estados|
+                                        +----------------------+
+                                    -->
+                                </select>
+                            </div>
+                            <div class="col-lg-4">
+                                <label>Municipio</label>
+                                <select name="MunicipioId" class="col-lg-12 form-control" id="comboboxMunicipio">
+                                    <!--
+                                        +-------------------------+
+                                        |Información de Municipios|
+                                        +-------------------------+
+                                    -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="wizard-buttons">
+                            <button type="button" class="btn btn-next">Siguiente</button>
+                        </div>
+                    </fieldset>
+                    <fieldset id="formContacto">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label>Titulo</label>
+                                <input type="text" class="form-control" placeholder="Titulo" name="Titulo">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <label>Nombre</label>
+                                <input type="text" class="form-control" placeholder="Nombre" name="Nombre">
+                            </div>
+                            <div class="col-lg-6">
+                                <label>Apellido</label>
+                                <input type="text" class="form-control" placeholder="Apellidos" name="Apellidos">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Telefono</label>
+                                <input type="text" class="form-control" placeholder="Telefono" name="Telefono">
+                            </div>
+                            <div class="col-md-4">
+                                <label>Extensión</label>
+                                <input type="text" class="form-control" placeholder="Extension" name="Extension">
+                            </div>
+                            <div class="col-md-4">
+                                <label>Telefono Celular</label>
+                                <input type="text" class="form-control" placeholder="Celular" name="Celular">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <label>Correo Electronico</label>
+                                <input type="text" class="form-control" placeholder="CorreoElectronico" name="CorreoElectronico">
+                            </div>
+                            <div class="col-md-4">
+                                <label>Puesto</label>
+                                <input type="number" class="form-control" placeholder="Puesto" name="Puesto">
+                            </div>
+                        </div>
+                       
+                        <div class="wizard-buttons">
+                            <button type="button" class="btn btn-previous">Anterior</button>
+                            <button type="button" class="btn btn-next">Siguiente</button>
+                        </div>
+                    </fieldset>
+                    <fieldset id="formInfoF">
+                        <button type="button" class="btn btn-success" id="btnGuardarInfo">Agregar Información Físcal</button>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <label>Razón social</label>
+                                <input type="text" placeholder="Razon Social" class="form-control" name="RazonSocial" id="txtRazonSocial" >
+                            </div>
+                            <div class="col-lg-6">
+                                <label>RFC</label>
+                                <input type="text" class="form-control" placeholder="RFC" name="RFC" id="txtRFC">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <label>Calle</label>
+                                <input type="text" class="form-control" placeholder="Calle" name="Calle" id="txtCalle">
+                            </div>
+                            <div class="col-lg-3">
+                                <label>Número Exterior</label>
+                                <input type="text" class="form-control" placeholder="Numero Exterior" name="NumeroExterior" id="txtNumeroExterior">
+                            </div>
+                            <div class="col-lg-3">
+                                <label>Número Interior</label>
+                                <input type="text" class="form-control" placeholder="Numero Interior" name="NumeroInterior" id="txtNumeroInterior">
+                            </div>
+                            <div class="col-lg-3">
+                                <label>Código Postal</label>
+                                <input type="text" class="form-control" placeholder="Código Postal" name="CodigoPostal" id="txtCodigoPostal">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <label>Colonia</label>
+                                <input type="text" class="form-control" placeholder="Colonia" name="Colonia" id="txtColonia">
+                            </div>
+
+                            <div class="col-lg-6">
+                                <label>Ciudad</label>
+                                <input type="text" class="form-control" placeholder="Ciudad" name="Ciudad" id="txtCiudad">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <label>País</label>
+                                <select name="PaiId" class="col-lg-12 form-control" id="comboboxPaisI">
+                                    <option value="-1">Selecciona el país</option>
+                                    @foreach (var item in ViewBag.List)
+                                    {
+                                        <option value="@item.PaiId">@item.Nombre</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-lg-4">
+                                <label>Estado</label>
+                                <select name="EstadoId" class="col-lg-12 form-control" id="comboboxEstadoI">
+                                    <!--
+                    +----------------------+
+                    |Información de Estados|
+                    +----------------------+
+                -->
+                                </select>
+                            </div>
+                            <div class="col-lg-4">
+                                <label>Municipio</label>
+                                <select name="MunicipioId" class="col-lg-12 form-control" id="comboboxMunicipioI">
+                                    <!--
+                    +-------------------------+
+                    |Información de Municipios|
+                    +-------------------------+
+                -->
+                                </select>
+                            </div>
+                        </div>
+                        <table class="table table-hover" id="tablaInformacionF">
+                            <thead>
+                                <tr>
+                                    <th>Razon Social</th>
+                                    <th>RFC</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <div class="wizard-buttons">
+                            <button type="button" class="btn btn-previous">Anterior</button>
+                            <button type="button" class="btn btn-success" id="btnGuardar">Guardar</button>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <!--<button type="button" class="btn btn-default cerrar" data-dissmiss="modal" aria-label="Close">Cancelar</button>
+                        <button type="button" class="btn btn-success" id="btnGuardar">Guardar</button>-->
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

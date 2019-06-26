@@ -1,0 +1,64 @@
+﻿
+@{
+    ViewBag.Title = "AgregarProductos";
+    Layout = "~/Views/Shared/_LayoutCotizador.cshtml";
+}
+
+<h1>Agregar nuevo Producto</h1>
+<div class="row">
+    <form action="" method="post" id="agragarCategoria">
+        <div class="row col-lg-12">
+            <div class="idcategoria form-group">
+
+            </div>
+            <div class="claveproducto form-group col-xl-2 col-lg-2 col-md-2">
+                <label for="">Clave</label>
+                <input class="form-control" type="text" placeholder="Clave del producto" name="clave-producto" required />
+            </div>
+            <div class="nombreproducto form-group col-xl-3 col-lg-3 col-md-3">
+                <label for="nombre">Nombre</label>
+                <input class="form-control" type="text" placeholder="Nombre del producto" name="nombre-producto" required />
+            </div>
+            <div class="modeloproductos form-group col-xl-2 col-lg-2 col-md-2">
+                <label for="modelo">Modelo</label>
+                <input class="form-control" type="text" placeholder="Modelo del producto" name="modelo-producto" required />
+            </div>
+            <div class="numserieproductos form-group col-xl-2 col-lg-2 col-md-2">
+                <label for="numeroserie">Numero de serie</label>
+                <input class="form-control" type="text" placeholder="Numero de serie" name="numeroserie-producto" required />
+            </div>
+            <div class="estatusproductos form-group col-xl-1 col-lg-1 col-md-1">
+                <label for="estatus">Estatus</label>
+                <input class="form-control" type="text" placeholder="estatus" name="estatus-producto" required />
+            </div>
+            <div class="categoriaidproducto form-group col-xl-2 col-lg-2 col-md-2">
+                <label for="marca">Marca id</label>
+                <input class="form-control" type="text" placeholder="id de la marca" name="marcaid-producto" required />
+            </div>
+            <div class="categoriaid form-group col-xl-2 col-lg-2 col-md-2">
+                <label for="Estatus">Categoria id</label>
+                <input class="form-control" type="text" placeholder="id de la categoria" name="categoriaid-producto" required />
+            </div>
+
+            <div class="codbarproductos form-group col-xl-2 col-lg-2 col-md-2">
+                <label for="codigobar">Codigo de barras</label>
+                <input class="form-control" type="text" placeholder="Codigo de barras del producto" name="codigobar-producto" required />
+            </div>
+            <div class="unimedidaproductos form-group col-xl-2 col-lg-2 col-md-2">
+                <label for="unimedida">Unida de medida</label>
+                <input class="form-control" type="text" placeholder="Unidad de medida" name="unidadmedida-producto" required />
+            </div>
+            <div class="describcoproductos form-group col-xl-6 col-lg-6 col-md-6">
+                <label for="describcioncorto">Descripción corta</label>
+                <textarea class="form-control" placeholder="Descripción breve del producto" name="describcioncorta-producto" rows="2" cols="4"></textarea>
+            </div>
+            <div class="describcompproductos form-group col-xl-12 col-lg-12 col-md-12">
+                <label for="describcioncompleta">Descripción completa</label>
+                <textarea class="form-control" placeholder="Descripción completa del producto" name="describcioncompleta-producto" rows="5" cols="4"></textarea>
+            </div>
+        </div>
+        <div class="submit col-xl-12 col-lg-12 col-md-12">
+            <input class="btn btn-success" type="submit" value="Guardar" id="guardar-btn" />
+        </div>
+    </form>
+</div>

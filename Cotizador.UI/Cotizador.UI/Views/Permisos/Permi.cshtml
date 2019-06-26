@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Cotizador.UI.Models.BitPermission>
+@{
+    ViewBag.Title = "Permi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<center><h2>PERMISOS</h2></center>
+<button class="btn btn-success">@Html.ActionLink("Nuevo", "Crear")</button>
+
+
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <div class=" row">
+               
+                <div class="col-md-5 text-center"><b>NOMBRE DEL PERMISO</b></div>
+                <div class="col-md-5 text-center"><b>GRUPO</b></div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class=" row">
+                @foreach (var iteam in Model)
+                {
+                    <div class="col-md-5 text-center">
+                        @Html.DisplayFor(modelIteam => iteam.FriedlyName)
+                    </div>
+                    <div class="col-md-5 text-center">
+                        @Html.DisplayFor(modelIteam => iteam.GroupedBy)
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-success">@Html.ActionLink("EDITAR", "Edit", new { id = iteam.BitPermissionId })</button>
+                        <button class="btn btn-success" >@Html.ActionLink("ELIMINAR", "Delete", new { id = iteam.BitPermissionId })</button>
+                    </div>
+                }
+                </div>
+            </div>
+     </div>

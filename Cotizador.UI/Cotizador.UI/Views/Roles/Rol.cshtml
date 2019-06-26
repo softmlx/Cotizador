@@ -1,0 +1,105 @@
+﻿@model  IEnumerable<Cotizador.UI.Models.BitRole>
+@{
+    ViewBag.Title = "Rol";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<center><h2>ROLES</h2></center>
+
+<div class="row">
+    <!--buttonbutton-->
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#insRoles">Nuevo</button>
+    <div class="row">
+        <div class="col-md-2"><h4><b>ROL</b></h4></div>
+        <div class="col-md-3"><h4><b>DESCRIPCION</b></h4></div>
+        <div class="col-md-4"></div>
+    </div>
+    <div class="tabla">
+        @foreach (var iteam in Model)
+        {
+        <div class="row">
+            <div class="col-md-2">
+                @Html.DisplayFor(modelIteam => iteam.Name)
+            </div>
+            <div class="col-md-3">
+                @Html.DisplayFor(modelIteam => iteam.DisplayName)
+            </div>
+            <div class="col-md-4">
+                @Html.ActionLink("EDITAR", "Edit", new { id = iteam.BitRoleId })
+                @Html.ActionLink("ELIMINAR", "Delete", new { id = iteam.BitRoleId })
+            </div>
+        </div>
+
+        }
+    </div>
+</div>
+    <div class="modal fade" id="insRoles" tabindex="-1" role="dialog" aria-labelledby="rolModalLabel">
+        <form id="frmNewRol" method="post" action="Insert">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close cerrar" data-dissmiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Menu nuevo Rol</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-3 col-lg-2 col-xs-3">
+                                <h5><b>Rol</b></h5><input type="text" class="form-control" placeholder="Rol" id="Name" name="Name" required>
+                            </div>
+                            <div class="col-md-4 col-lg-4 col-xs-4">
+                                <h5><b>Descripcion</b></h5><input type="text" class="form-control" placeholder="Descripcion" id="DisplayName" name="DisplayName">
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            @foreach (var permiso in ViewBag.ListaPermisos)
+                            {
+                                <div class="col-md-3 col-lg-3 col-xs-3">
+                                    <input type="checkbox" name="ids" value="@permiso.BitPermissionId" class="checkbox" />@permiso.FriendlyName<br />
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default cerrar" data-dissmiss="modal" aria-label="Close">Cancelar</button>
+                        <button type="button" class="btn btn-success" id="btnGuardar">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+@section Scripts{
+    $(document).ready(function(){
+        $(".cerrar").on('click',function(){
+            $("#insRoles").modal('hide');
+        });
+        $("#btnGuardar").on('click',function(){
+            var form = $("#frmNewRol");
+            
+            $.ajax({
+                    url: '@Url.Action("Insert","Roles")',
+                    type: 'post',
+                    cache: false,
+                    data: form.serialize(),
+                    success: function(result){
+                            $('.tabla div').remove();
+                            //Validar
+                            if(result)
+                            {
+                               $.each(JSON.parse(result), function (i,valor) 
+                               {
+                                    var html = "<div class='row'><div class='col-sm-2'>"+valor.Name+"</div>"
+                                            + "<div class='col-sm-3'>"+valor.DisplayName+"</div>"
+                                            + "<div class='col-sm-4'></div></div>";
+                                    $('.tabla').append(html);
+                               });
+                            }
+                            $("#insRoles").modal('hide');
+
+                    }
+                });
+            return false;
+        });
+    });    
+}

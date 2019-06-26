@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = "EditarCategoria";
+    Layout = "~/Views/Shared/_LayoutCotizador.cshtml";
+}
+
+<h1>Editar Categoría</h1>
+<div class="row">
+    <form action="" method="post" id="agragarCategoria">
+        <div class="row col-lg-12">
+            <div class="idcategoria form-group">
+
+            </div>
+            <div class="clavecategoria form-group col-xl-2 col-lg-2 col-md-2">
+                <label for="clave">Clave</label>
+                <input class="form-control" type="text" placeholder="Clave de la categoría" name="clave-categoria" value="" required />
+            </div>
+            <div class="nombrecategoria form-group col-xl-6 col-lg-6 col-md-6">
+                <label for="nombre">Nombre</label>
+                <input class="form-control" type="text" placeholder="Nombre de la categoría" name="nombre-categoria" value="" required />
+            </div>
+            <div class="estatuscategoria form-group col-xl-2 col-lg-2 col-md-2">
+                <label for="Estatus">Estatus</label>
+                <input class="form-control" type="text" placeholder="estatus de la categoría" name="estatus-categoria" value="" required />
+            </div>
+        </div>
+        <div class="submit col-xl-12 col-lg-12 col-md-12">
+            <input class="btn btn-success" type="submit" value="Guardar" id="guardar-btn" />
+            <input class="btn btn-danger" type="submit" value="Cancelar" id="cancelar-btn" />
+        </div>
+    </form>
+</div>

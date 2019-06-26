@@ -1,0 +1,35 @@
+﻿@model Cotizador.UI.Models.BitPermission
+@{
+    ViewBag.Title = "PermisosEditar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>PermisosEditar</h2>
+<CENTER><h4>Editar de permisos</h4></CENTER>
+
+
+<form class="navbar-form navbar-center" role="search" action="/Permisos/Update/@Model.BitPermissionId" method="post">
+    <div class="row">
+        <div class="col-md-3 col-lg-3 col-xs-3"></div>
+            <input type="hidden" value="@Model.BitPermissionId" name="BitPermissionId" id="BitPermissionId" />
+        <div class="col-md-3 col-lg-2 col-xs-3">
+            <h5><b>NOMBRE DEL PERMISO</b></h5><input type="text" class="form-control" placeholder="NOMBRE DEL PERMISO" name="FriedlyName" value="@Model.FriedlyName">
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-4">
+            <h5><b>GRUPO</b></h5><input type="text" class="form-control" placeholder="GRUPO" name="GroupedBy" value="@Model.GroupedBy">
+        </div>
+        <div class="col-md-3 col-lg-3 col-xs-3">
+
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-4"></div>
+        <div class="col-md-2 col-lg-2 col-xs-3">
+            <button class="btn-success btn">GUARDAR</button>
+        </div>
+        <div class="col-md-3">
+            <button>@Html.ActionLink("CANCELAR", "Index")</button>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+
+</form>
+

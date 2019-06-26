@@ -1,0 +1,301 @@
+﻿@model IEnumerable<Cotizador.UI.Models.TipoCambio>
+
+@{
+    ViewBag.Title = "Tipo de Cambio";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Tipo de Cambio</h2>
+
+<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+    <!--<button class="btn btn-success">@Html.ActionLink("Agregar Tipo de Cambio", "Create", null, new { style = "color:white" })</button>-->
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#insTipoCambio">Agregar Tipo de Cambio</button>
+</div>
+
+<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12"><p></p></div>
+
+<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+    <div class="panel panel-default">
+        <div class="panel-heading text-center">
+            <div class="row">
+                <div class="col-md-3 col-lg-3 col-sm-3 col-xs-3">Moneda 1</div>
+                <div class="col-md-3 col-lg-3 col-sm-3 col-xs-3">Moneda 2</div>
+                <div class="col-md-3 col-lg-3 col-sm-3 col-xs-3">Factor</div>
+                <div class="col-md-3 col-lg-3 col-sm-3 col-xs-3">Opciones</div>
+            </div>
+        </div>
+
+        <div class="panel-body text-center" id="elementoslista">
+            <div class="tabla" id="tabla">
+                @foreach (var iteam in Model)
+                {
+                    <div class="row">
+                        <div class="col-md-3 col-lg-3 col-sm-3 col-xs-3">@Html.DisplayFor(ModelIteam => iteam.Moneda.Nombre)</div>
+                        <div class="col-md-3 col-lg-3 col-sm-3 col-xs-3">@Html.DisplayFor(ModelIteam => iteam.Moneda1.Nombre)</div>
+                        <div class="col-md-3 col-lg-3 col-sm-3 col-xs-3">@Html.DisplayFor(ModelIteam => iteam.Factor)</div>
+                        <div class="col-md-3 col-lg-3 col-sm-3 col-xs-3 center-block">
+                            <button type="button" class="btn btn-success btnEdit" id="@iteam.Moneda1Id:@iteam.Moneda2Id" name="btnEdit">Editar</button>
+                            <button class="btn btn-danger btnDelete" id="@iteam.Moneda1Id:@iteam.Moneda2Id" name="btnDelete">Eliminar</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <div class="modal fade" id="insTipoCambio" tabindex="-1" role="dialog" aria-labelledby="tipModalLavel">
+        <form id="frmNewTipoCambio" method="post" action="Insert">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close cerrar" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">Nuevo Cambio de Moneda</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="recipient-name" class="col-form-label">Moneda 1</label>
+                                <select class="form-control" name="Moneda1Id" required>
+                                    <option value="">Seleccione una Opcion</option>
+                                    @foreach (var iteam in ViewBag.List)
+                                    {
+                                        <option value="@iteam.MonedaId">@iteam.Nombre</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="recipient-name" class="col-form-label">Moneda 2</label>
+                                <select class="form-control" name="Moneda2Id" required>
+                                    <option value="">Seleccione una Opcion</option>
+                                    @foreach (var iteam in ViewBag.List)
+                                    {
+                                        <option value="@iteam.MonedaId" >@iteam.Nombre</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="recipient-name" class="col-form-label">Factor</label>
+                                <input type="number" min="0" class="form-control" placeholder="Factor de cambio" id="Factor" name="Factor" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default cerrar" data-dismiss="modal" aria-label="Close">Cancelar</button>
+                        <button type="button" class="btn btn-success" id="btnGuardar">Guadar</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <div class="modal fade" id="updTipoCambio" tabindex="-1" role="dialog" aria-labelledby="tipModalLabel">
+        <div class="modal-dialog">
+            <form id="frmUpdTipoCambio" method="post" action="Update">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close cerrar cerrarUpd" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">Editar Tipo de Cambio</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row" id="updRowTipoCambio">
+                            <div></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default cerrarUpd" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success" id="btnActualizar">Actualizar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+$(document).ready(function(){
+    $(".cerrar").on('click', function(){
+        $("#insTipoCambio").modal('hide');
+    });
+
+    $("#btnGuardar").on('click', function(){
+        var form = $("#frmNewTipoCambio");
+        $.ajax({
+            url: '@Url.Action("Insert","TipoCambio")',
+            type: 'post',
+            cache: false,
+            data: form.serialize(),
+            success: function(result){
+                if (result){
+                    $('#tabla div').remove();
+                    var html = "";
+                    $.each(result[1], function(i, valor){
+                        html += "<div class='row'>";
+                         $.each(result[0], function(j,valor1){
+                            if(valor1.MonedaId == valor.Moneda1Id){
+                                 html+= "<div class='col-md-3 col-lg-3 col-sm-3 col-xs-3'>"+valor1.Nombre+"</div>";
+                            }
+                        });
+                        $.each(result[0], function(j,valor1){
+                            if(valor1.MonedaId == valor.Moneda2Id){
+                                 html+= "<div class='col-md-3 col-lg-3 col-sm-3 col-xs-3'>"+valor1.Nombre+"</div>";
+                            }
+                        });
+                        html += "<div class='col-md-3 col-lg-3 col-sm-3 col-xs-3'>"+valor.Factor+"</div>"
+                                + "<div class='col-md-3 col-lg-3 col-sm-3 col-xs-3'>"
+                                 + "<button type='button' class='btn btn-success btnEdit' id='"+valor.Moneda1Id+":"+valor.Moneda2Id+"' name='btnEdit'>Editar</button>"
+                                 + "<button type='button' class='btn btn-danger btnDelete' id='"+valor.Moneda1Id+":"+valor.Moneda2Id+"' name='btnDelete'>Eliminar</button>"
+                              +"</div>"
+                             + "</div>";
+                    });
+                    //$('tabla').add(html);
+                    $('#tabla').append(html);
+                    $("#frmNewTipoCambio")[0].reset();
+        $("#insTipoCambio").modal('hide');
+                } else{
+                    var aviso = alert("No se pudo guardar la informacion, verifique:\n 1. Hacen falta llenar campos. \n 2. El Tipo de Cambio esta siendo duplicado. \n 3. El Factor es 0 o menor a este.");
+                }
+            }
+        });
+        
+         return false;
+    });
+
+
+    $("#tabla").on('click','button.btnEdit', function(){
+        var clave = $(this).attr("id");
+        var claves = clave.split(":")
+        $.ajax({
+            url: '@Url.Action("Edit","TipoCambio")',
+            type: 'post',
+            cache: false,
+            data: {id1: claves[0], id2: claves[1]},
+            success: function(result){
+                if (result){
+                    $('#updRowTipoCambio div').remove();
+                    var html= "<div class='form-group col-md-6 col-lg-6 col-sm-6 col-xs-6'>"
+                                 +"<label for='recipient-name' class='col-form-label'>Moneda 1</label>";
+                                    $.each(result[1], function(i, valor){
+                                        $.each (result[0], function(j, valor1){
+                                            if (valor.Moneda1Id == valor1.MonedaId){
+                                                html += "<input type='hidden' class='form-control' readonly='readonly' name='Moneda1Id' value='"+valor1.MonedaId+"'/>"
+                                                    +"<h4> <label class='label label-default'>"+valor1.Nombre+"</label></h4>";
+                                            }
+                                            
+                                        });
+                                    });
+                                
+                                html += "</div>"
+                                 + "<div class='form-group col-md-6 col-lg-6 col-sm-6 col-xs-6'>"
+                                     + "<label for='recipient-name' class='col-form-label'>Moneda 2</label>";
+                                    $.each(result[1], function(i, valor){
+                                        $.each (result[0], function(j, valor1){
+                                            if (valor.Moneda2Id == valor1.MonedaId){
+                                                html += "<input type='hidden' class='form-control' readonly='readonly' name='Moneda2Id' value='"+valor1.MonedaId+"'/>"
+                                                    +"<h4> <label  class='label label-default'>"+valor1.Nombre+"</label></h4>";
+                                            }
+                                        });
+                                    });
+                                 html += "</div>"
+                                 + "<div class='form-group col-md-6 col-lg-6 col-sm-6 col-xs-6'>"
+                                     + "<label for='recipient-name' class='col-form-label'>Factor</label>";
+                                    $.each(result[1], function(i, valor){
+                                            html += "<input type='number' min='0' class='form-control' placeholder='Factor de cambio' id='Factor' name='Factor' value='"+valor.Factor+"' required>";
+                                    });
+                                html += "</div>";
+                        $('#updRowTipoCambio').append(html);
+                        $('#updTipoCambio').modal('show');
+                }
+                if (result == false){
+                        var aviso = alert("No hemos podido obtener informacion.");
+                    }
+            }
+        });
+        return false;
+    });
+
+
+    $("#btnActualizar").on('click',function(){
+        var form = $("#frmUpdTipoCambio");
+        $.ajax({
+            url: '@Url.Action("Update","TipoCambio")',
+            type: 'post',
+            cache: 'false',
+            data: form.serialize(),
+            success: function(result){
+                if (result){
+                    $('#tabla div').remove();
+                    var html = "";
+                    $.each(result[1], function(i, valor){
+                        html += "<div class='row'>";
+                         $.each(result[0], function(j,valor1){
+                            if(valor1.MonedaId == valor.Moneda1Id){
+                                 html+= "<div class='col-md-3 col-lg-3 col-sm-3 col-xs-3'>"+valor1.Nombre+"</div>";
+                            }
+                        });
+                        $.each(result[0], function(y,valor1){
+                            if(valor1.MonedaId == valor.Moneda2Id){
+                                 html+= "<div class='col-md-3 col-lg-3 col-sm-3 col-xs-3'>"+valor1.Nombre+"</div>";
+                            }
+                        });
+                        html += "<div class='col-md-3 col-lg-3 col-sm-3 col-xs-3'>"+valor.Factor+"</div>"
+                                + "<div class='col-md-3 col-lg-3 col-sm-3 col-xs-3'>"
+                                 + "<button class='btn btn-success btnEdit' id='"+valor.Moneda1Id+":"+valor.Moneda2Id+"' name='btnEdit'>Editar</button>"
+                                 + "<button class='btn btn-danger btnDelete' id='"+valor.Moneda1Id+":"+valor.Moneda2Id+"' name='btnDelete'>Eliminar</button>"
+                              +"</div>"
+                             + "</div>";
+                    });
+                    //$('tabla').add(html);
+                    $('#tabla').append(html);
+                }
+                if (result == false){
+                    var aviso = alert("No hemos podido actualizar este tipo de cambio, verifique que el Factor no sea 0 o menor a este.");
+                }
+            }
+        });
+        $("#updTipoCambio").modal('hide');
+        return false;
+    });
+
+
+
+
+    $("#tabla").on('click','button.btnDelete', function(){
+        var clave = $(this).attr("id")
+        var claves = clave.split(":");
+        var opcion = confirm("¿Desea eliminar este Tipo de Cambio?");
+        if (opcion == true)
+        {
+            $.ajax({
+                url: '@Url.Action("Delete","TipoCambio")',
+                type: 'post',
+                cache: false,
+                data: {id1: claves[0], id2: claves[1],},
+                success: function(result){
+                    if (result != null){
+                        $("#"+clave).parent().parent().parent().remove();
+                    }
+                    
+                    if (result == false){
+                        var aviso = alert("No hemos podido eliminar este Tipo de Cambio");
+                    }
+                }
+            });
+        }
+        return false;
+    });
+
+
+
+
+});
+}

@@ -1,0 +1,118 @@
+@model IEnumerable<Cotizador.UI.Models.Cotizacion>
+@{
+    ViewBag.Title = "Cotizaciones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <style>
+    </style>
+}
+<div id="app">
+    <!-- The main container for VueJS -->
+    <button type="button" class="btn btn-success" data-toggle="modal" style="margin-bottom:1em;" onclick="location.href='/Cotizacions/Create'">
+        <i class="fa fa-plus" aria-hidden="true"></i> Agregar Cotizacion
+    </button>
+    <div class="panel panel-default">
+        <div class="panel-heading table table-striped">
+            <div class="row">
+                <div class="col-xs-2 col-lg-2 col-md-2 font-weight-bold">
+                    Proyecto
+                </div>
+                <div class="col-xs-2 col-lg-2 col-md-2 font-weight-bold">
+                    Fecha Reg.
+                </div>
+                <div class="col-xs-2 col-lg-2 col-md-2 font-weight-bold">
+                    Fecha Cot.
+                </div>
+                <div class="col-xs-2 col-lg-2 col-md-2 font-weight-bold">
+                    No. Productos
+                </div>
+                <div class="col-xs-2 col-lg-2 col-md-2 font-weight-bold">
+                    Total
+                </div>
+                <div class="col-xs-2 col-lg-2 col-md-2 font-weight-bold">
+
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <!--Aqui va un for o algo que recorrera los datos-->
+            <div class="tabla" id="tabla">
+                @foreach (var p in Model)
+                {
+                    <div class="row">
+                        <div class="col-xs-2 col-lg-2 col-md-2">
+                            @Html.DisplayFor(modelP => p.Proyecto)
+                        </div>
+                        <div class="col-xs-2 col-lg-2 col-md-2">
+                            @Html.DisplayFor(modelP => p.FechaRegistro)
+                        </div>
+                        <div class="col-xs-2 col-lg-2 col-md-2">
+                            @Html.DisplayFor(modelP => p.FechaCotizacion)
+                        </div>
+                        <div class="col-xs-2 col-lg-2 col-md-2">
+                            @Html.DisplayFor(modelP => p.TotalProductos)
+                        </div>
+                        <div class="col-xs-2 col-lg-2 col-md-2">
+                            $@Html.DisplayFor(modelP => p.ImporteTotal)
+                        </div>
+                        <div class="col-xs-2 col-lg-2 col-md-2">
+                            <!--
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#editarproducto">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#eliminarproducto">
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                            </button>
+                            -->
+                            <button type="button" class="btn btn-success edit-btn" onclick="location.href='@Url.Action("Edit", "Cotizacions", new { p.CotizacionId })'" id="@p.CotizacionId">Editar</button>
+                            <button type="button" class="btn btn-danger saveid-btn" onclick="askConfirm('@p.Proyecto', '@p.CotizacionId')" id="@p.CotizacionId">Eliminar</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section ImportScripts {
+    <script src="~/Scripts/sweetalert2@8.js"></script>
+    <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000
+        });
+
+        function askConfirm(cotizacionName, cotizacionId) {
+            if (confirm(`¿Estás seguro de borrar la cotización "${cotizacionName}"?`)) {
+                $.post("/Cotizacions/deleteCotizacion", {
+                    CotizacionId: cotizacionId
+                })
+                    .done(function (res) {
+                        if (res == 200) {
+                            setTimeout(function () { location.reload() }, 2000);
+                            Toast.fire({
+                                type: 'success',
+                                title: 'Eliminada correctamente'
+                            })
+                        } else {
+                            Toast.fire({
+                                type: 'error',
+                                title: 'No se pudo eliminar'
+                            })
+                        }
+                    })
+                    .fail(function (err) {
+                        Toast.fire({
+                            type: 'error',
+                            title: 'Ha ocurrido un error inesperado'
+                        })
+                        console.error(err);
+                    })
+            }
+        }
+    </script>
+}

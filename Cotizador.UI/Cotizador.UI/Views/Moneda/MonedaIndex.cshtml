@@ -1,0 +1,22 @@
+﻿@model IEnumerable<Cotizador.UI.Models.Moneda>
+@{
+    ViewBag.Title = "MonedaIndex";
+    Layout = "~/Views/Shared/_LayoutCotizador.cshtml";
+}
+
+
+<h2>Moneda</h2>
+
+<div class="panel-defaul">
+    @foreach (var iteam in Model)
+    {
+        @Html.DisplayFor(modelIteam => iteam.MonedaId)
+        @Html.DisplayFor(modelIteam => iteam.Nombre)
+        @Html.DisplayFor(modelIteam => iteam.Simbolo)
+        @Html.DisplayFor(modelIteam => iteam.Clave)
+        @Html.DisplayFor(modelIteam => iteam.Valor)
+        @Html.DisplayFor(modelIteam => iteam.Estatus)
+
+    }
+</div>
+

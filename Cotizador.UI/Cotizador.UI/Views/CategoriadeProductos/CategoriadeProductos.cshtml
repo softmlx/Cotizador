@@ -1,0 +1,395 @@
+﻿@model IEnumerable<Cotizador.UI.Models.Categoria>
+@{
+    ViewBag.Title = "CategoriadeProductos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="text-center">Categoría de productos</h1>
+
+
+<button type="button" class="btn btn-success btnflap hidden-md hidden-sm hidden-xs text-center" data-toggle="modal" data-target="#agregarcategoria">
+    <i class="fa fa-plus" aria-hidden="true"></i>
+    Agregar Categoría
+</button>
+
+<!--
+<a class="btn btn-success" href="CategoriadeProductos/agregarCategoria">
+    <i class="fa fa-plus" aria-hidden="true"></i>
+    Agregar Categoría
+</a>
+-->
+<!--Modal agregar categoria-->
+<div class="modal fade" id="agregarcategoria" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"></button>
+                <h1 class="modal-title">Agregar categoria</h1>
+            </div>
+            <div class="modal-body">
+                <form action="Insert" method="post" id="AgragarCategoria">
+                    <div class="row col-lg-12">
+                        <div class="idcategoria form-group">
+
+                        </div>
+                        <div class="clavecategoria form-group col-xl-2 col-lg-2 col-md-2">
+                            <label for="clave">Clave</label>
+                            <input class="form-control" type="text" placeholder="Clave de la categoría" name="Clave" required />
+                        </div>
+                        <div class="nombrecategoria form-group col-xl-6 col-lg-6 col-md-6">
+                            <label for="nombre">Nombre</label>
+                            <input class="form-control" type="text" placeholder="Nombre de la categoría" name="Nombre" required />
+                        </div>
+                        <div class="estatuscategoria form-group col-xl-2 col-lg-2 col-md-2">
+                            <label for="Estatus">Estatus</label>
+                            <br />
+                            <input type="checkbox" name="Estatus" value="true" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="guardar-btn">Guardar</button>
+                        <button type="button" class="btn btn-danger cerrar" data-dismiss="modal" id="guardar-btn">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p>    </p>
+
+<!--Tabla para mostrar los datos insertados Escritorios y algunos telefonos <1200px-->
+<div class="panel panel-default hidden-md hidden-sm hidden-xs">
+    <div class="panel-heading text-center table table-striped">
+        <div class="row">
+            <div class="col-xs-3 col-lg-3 col-md-3 hidden-md-down font-weight-bold">
+                Clave
+            </div>
+            <div class="col-xs-4 col-lg-4 col-md-4 hidden-md-down font-weight-bold">
+                Nombre
+            </div>
+            <div class="col-xs-2 col-lg-2 col-md-2 hidden-md-down font-weight-bold">
+                Estatus
+            </div>
+            <div class="col-xs-3 col-lg-3 col-md-3 hidden-md-down font-weight-bold">
+
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <!--Aqui va un for o algo que recorrera los datos-->
+        <div class="tabla" id="tabla">
+            @foreach (var cat in Model)
+            {
+
+                <div class="row">
+                    <div class="col-xs-3 col-lg-3 col-md-3 hidden-md-down">
+                        @Html.DisplayFor(modelCat => cat.Clave)
+                    </div>
+                    <div class="col-xs-4 col-lg-4 col-md-4 hidden-md-down">
+                        @Html.DisplayFor(modelCat => cat.Nombre)
+                    </div>
+                    <div class="col-xs-2 col-lg-2 col-md-2 hidden-md-down">
+                        @Html.DisplayFor(modelCat => cat.Estatus)
+                    </div>
+                    <div class="col-xs-3 col-lg-3 col-md-3 hidden-md-down">
+                        <!--
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#editarcategoria">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#eliminarcategoria">
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                        </button>
+                        -->
+                        <button type="button" class="btn btn-success edit-btn" id="@cat.CategoriaId" name="edit-btn"> Editar </button>
+                        <button type="button" class="btn btn-danger saveid-btn" id="@cat.CategoriaId" name="saveid-btn">Eliminar</button>
+
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!--Boton y Tabla para mostrar los datos insertados Escritorios y algunos telefonos <992px -->
+
+<div class="visible-sm visible-md visible-xs">
+    <button type="button" class="btn btn-success visible-sm visible-md visible-lg visible-xs col-md-12 col-sm-12 col-xs-12" data-toggle="modal" data-target="#agregarcategoria">
+        <i class="fa fa-plus" aria-hidden="true"></i>
+        Agregar Categoría
+    </button>
+</div>
+
+<div class="visible-sm visible-md visible-xs">
+    @foreach (var cat in Model)
+    {
+        <div class=" container cardstyle">
+            <div class="col-md-12 col-sm-12 col-xs-12 linedown text-center">
+                <h2>@Html.DisplayFor(modelCat => cat.Nombre)</h2>
+            </div>
+
+            <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        Clave
+                        <p class="txtfield">@Html.DisplayFor(modelCat => cat.Clave)</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        Estatus
+                        <p class="txtfield">@Html.DisplayFor(modelCat => cat.Estatus)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-sm-12 col-xs-12 lineup text-center">
+                <div class="col-md-6 col-sm-6 col-xs-6 espacio col-centrado">
+                    <button type="button" class="btn btn-success edit-btn" id="@cat.CategoriaId" name="edit-btn"> Editar </button>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-6 espacio col-centrado">
+                    <button type="button" class="btn btn-danger saveid-btn" id="@cat.CategoriaId" name="saveid-btn">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+<!--Modal para editar una categoria-->
+
+<div class="modal fade" id="editarcategoria" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"></button>
+                <h1 class="modal-title">Editar categoria</h1>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" id="EditarCategoria">
+                    <div class="row col-lg-12">
+                        <div class="idcategoria form-group">
+                            <input type="hidden" value="" name="CategoriaId" id="CategoriaId" />
+                        </div>
+                        <div class="clavecategoria form-group col-xl-2 col-lg-2 col-md-2">
+                            <label for="clave">Clave</label>
+                            <input class="form-control" type="text" placeholder="Clave de la categoría" name="Clave" value="" />
+                        </div>
+                        <div class="nombrecategoria form-group col-xl-6 col-lg-6 col-md-6">
+                            <label for="nombre">Nombre</label>
+                            <input class="form-control" type="text" placeholder="Nombre de la categoría" name="Nombre" value="" />
+                        </div>
+                        <div class="estatuscategoria form-group col-xl-2 col-lg-2 col-md-2">
+                            <label for="Estatus">Estatus</label>
+                            <br />
+                            <input type="checkbox" name="Estatus" value="true" checked="" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="guardar-btn">Guardar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" id="cerrarUpd">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal para actualizar una categoria-->
+<div class="modal fade" id="frmUpdCategoria" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <form action="Update" method="post" id="ActualizarCategoria">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close cerrarUpd" data-dismiss="modal"></button>
+                    <h1 class="modal-title">Editar categoria</h1>
+                </div>
+                <div class="modal-body">
+                    <div class="row" id="updRowCategoria">
+                        <div></div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="btnActualizar">Guardar</button>
+                    <button type="button" class="btn btn-danger cerrarUpd" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--Modal para eliminar una categoria-->
+<div class="modal fade" id="eliminarconfirmacion" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"></button>
+                <h1 class="modal-title">¡Espera!</h1>
+            </div>
+            <div class="modal-body">
+                <h4>¿Esta seguro que desea eliminar esta categoria?</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success deletesbtn" id="deletes-btn">Si</button>
+                <button type="submit" class="btn btn-default" data-dismiss="modal" id="nodelete-btn">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    //<script>
+
+    $(document).ready(function(){
+        $(".cerrar").on('click',function(){
+            $("#agregarcategoria").modal('hide');
+        });
+        $(".cerrarUpd").on('click', function(){
+            $("#frmUpdCategoria").modal('hide');
+        });
+        $("#nodelete-btn").on('click', function(){
+            $("#eliminarconfirmacion").modal('hide');
+        });
+
+    //guardar datos desde el modal
+        $("#guardar-btn").on('click',function(){
+            var form = $("#AgragarCategoria");
+            $.ajax({
+                url: '@Url.Action("Insert", "CategoriadeProductos")',
+                type: 'post',
+                cache: false,
+                data: form.serialize(),
+                success: function(result){
+                    $('#tabla div').remove();
+                    //Validar
+                    if(result)
+                    {
+                        $.each(result, function (i,valor)
+
+                    {
+                        var checked ='';
+                        if(valor.Estatus)
+                            checked = 'checked = "checked"';
+                        var html = "<div class='row'>"
+                            +"<div class='col-xs-3 col-lg-3 col-md-3'>"+valor.Clave+"</div>"
+                            +"<div class='col-xs-4 col-lg-4 col-md-4'>"+valor.Nombre+"</div>"
+                            +"<div class='col-xs-2 col-lg-2 col-md-2'><input disabled type='checkbox' value='false' "+checked+"  /></div>"
+                            +"<div class='col-xs-3 col-lg-3 col-md-3'>"
+                                + "<button type='button' class='btn btn-success edit-btn' id='"+ valor.CategoriaId +"'> Editar </button>"
+                                + "<button type='button' class='btn btn-danger saveid-btn' id='"+ valor.CategoriaId +"'>Eliminar</button>"
+                            +"</div>"
+                        + "</div>";
+                        $('#tabla').append(html);
+                    });
+                    $("#AgragarCategoria")[0].reset();
+                    $("#agregarcategoria").modal('hide');
+                }
+            }
+        });
+        return false;
+    });
+    //llamando al modal para editar el dato
+        $("#tabla").on('click','button.edit-btn', function(){
+            $.ajax({
+                url: '@Url.Action("Edit", "CategoriadeProductos")',
+                type: 'post',
+                cache: false,
+                data: {
+                    id : this.id,
+                },
+            success: function(result){
+                $('#updRowCategoria div').remove();
+                if(result)
+                {
+                    var checked ='';
+                        if(result[0].Estatus)
+                            checked = 'checked = "checked"';
+                    var html ="<div class='clavecategoria form-group col-xl-2 col-lg-2 col-md-2'>"
+                                +"<input type='hidden' id='CategoriaId' name='CategoriaId'  value='"+ result[0].CategoriaId +"'/>"
+                                +"<label for='clave'>Clave</label>"
+                                +"<input class='form-control' type='text' placeholder='Clave de la categoría' name='Clave' value='"+ result[0].Clave +"'/>"
+                            +"</div>"
+                            +"<div class='nombrecategoria form-group col-xl-6 col-lg-6 col-md-6'>"
+                                +"<label for='nombre'>Nombre</label>"
+                                +"<input class='form-control' type='text' placeholder='Nombre de la categoría' name='Nombre' value='"+ result[0].Nombre +"' />"
+                            +"</div>"
+                            +"<div class='estatuscategoria form-group col-xl-2 col-lg-2 col-md-2'>"
+                                +"<label for='Estatus'>Estatus</label>"
+                                +"<br />"
+                                +"<input type='checkbox' name='Estatus' value='true' "+checked+"/>"
+                            +"</div>";
+                    $('#updRowCategoria').append(html);
+                    $("#frmUpdCategoria").modal('show');
+                }
+            }
+        });
+    });
+    //Actualizar un registro
+  $("#btnActualizar").on('click',function(){
+            var form = $("#ActualizarCategoria");
+            $.ajax({
+                url: '@Url.Action("Update", "CategoriadeProductos")',
+                type: 'post',
+                cache: false,
+                data: form.serialize(),
+                success: function(result){
+                    $('#tabla div').remove();
+                    //Validar
+                    if(result)
+                    {
+                        $.each(result, function (i,valor){
+                            var checked ='';
+                            if(valor.Estatus)
+                                checked = 'checked = "checked"';
+                            var html = "<div class='row'>"
+                            +"<div class='col-xs-3 col-lg-3 col-md-3'>"+valor.Clave+"</div>"
+                            +"<div class='col-xs-4 col-lg-4 col-md-4'>"+valor.Nombre+"</div>"
+                            +"<div class='col-xs-2 col-lg-2 col-md-2'><input disabled type='checkbox' value='false' "+checked+" /></div>"
+                            +"<div class='col-xs-3 col-lg-3 col-md-3'>"
+                                + "<button type='button' class='btn btn-success edit-btn' id='"
+                                + valor.CategoriaId +"'> Editar </button>"
+                                + "<button type='button' class='btn btn-danger saveid-btn' id='"
+                                + valor.CategoriaId +"'>Eliminar</button>"
+                            +"</div>"
+                        + "</div>";
+                            $('#tabla').append(html);
+                        });
+                        $("#frmUpdCategoria").modal('hide');
+                     }
+                }
+            });
+            return false;
+       });
+    //borrar un elemento
+        $("#tabla").on('click','button.saveid-btn', function(){
+            var ids = this.id;
+            console.log(`id : ${typeof(ids)}`);
+            $('.deletesbtn').data("id", ids);
+            $("#eliminarconfirmacion").modal('show');
+
+        });
+        $("#eliminarconfirmacion").on('click', 'button.deletesbtn', function () {
+
+            $("#eliminarconfirmacion").modal('hide');
+
+            $.ajax({
+                url: '@Url.Action("Delete", "CategoriadeProductos")',
+                type: 'post',
+                cache: false,
+                data: {
+                           id : $('.deletesbtn').data("id"),
+                    },
+                success: function(result){
+                        $("#"+ result).parent().parent().remove();
+                    }
+                });
+                return false;
+        });
+  });
+    //</script>
+}

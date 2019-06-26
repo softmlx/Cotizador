@@ -1,0 +1,154 @@
+﻿@model IEnumerable<Cotizador.UI.Models.Proveedor>
+
+
+@{
+    ViewBag.Title = "Proveedor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#insProveedor" id="btnNuevo">Nuevo</button>
+    @Html.Partial("InsProveedor")
+    <div class="row">
+        <div class="col-md-5 text-center"><h4><b>NOMBRE</b></h4></div>
+        <div class="col-md-5 text-center"><h4><b>ESTATUS</b></h4></div>
+    </div>
+
+    <div class="tabla" id="tabla">
+        @foreach (var iteam in Model)
+        {
+        <div class="row">
+            <div class="col-md-5 text-center">@Html.DisplayFor(modelIteam => iteam.Nombre)</div>
+            <div class="col-md-5 text-center">
+                
+                <br />
+                <input type="checkbox" name="Estatus" value="true" />
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-success btnEdit" id="@iteam.ProveedorId" name="btnEdit">Editar</button>
+                <button class="btn btn-danger btnDelete" id="@iteam.ProveedorId" name="btnDelete">Eliminar</button>
+            </div>
+        </div>
+        }
+    </div>
+</div>
+
+
+@section Scripts
+{
+    $(document).ready(function()
+    {
+        $(".cerrar").on('click',function()
+        {
+            $("#insProveedor").modal('hide');
+        });
+
+        $('#comboboxPais').on('change',function (){
+            $('#comboboxMunicipio option').remove();
+            var PaiId = $('#comboboxPais option:selected').val();
+            $.ajax({
+                type: 'GET',
+                data: {PaiId:PaiId},
+                url: '@Url.Action("loadStates","Proveedor")',
+                success: function (result)
+                {
+                    var e = "<option value='-1'>Selecciona el estado</option>";
+                    $.each(result,function(index, value){
+                        e += "<option value='"+value.EstadoId+"'>"+value.Nombre+"</option>";
+                    });
+                    $('#comboboxEstado').html(e);
+                }
+            });
+            
+        });
+        
+        $('#comboboxEstado').on('change',function (){
+            var EstadoId = $('#comboboxEstado option:selected').val();
+            $.ajax({
+                type: 'GET',
+                data: {EstadoId:EstadoId},
+                url: '@Url.Action("loadMunicipio", "Proveedor")',
+                success: function (result)
+                {
+                    var e = "<option value='-1'>Selecciona el municipio</option>";
+                    $.each(result,function(index, value){
+                        e += "<option value='"+value.MunicipioId+"'>"+value.Nombre+"</option>";
+                    });
+                    $('#comboboxMunicipio').html(e);
+                    
+                }
+            });
+        });
+
+        $('#comboboxPaisI').on('change',function (){
+            $('#comboboxMunicipioI option').remove();
+            var PaiId = $('#comboboxPaisI option:selected').val();
+            $.ajax({
+                type: 'GET',
+                data: {PaiId:PaiId},
+                url: '@Url.Action("loadStatesI", "Proveedor")',
+                success: function (result)
+                {
+                    var e = "<option value='-1'>Selecciona el estado</option>";
+                    $.each(result,function(index, value){
+                        e += "<option value='"+value.EstadoId+"'>"+value.Nombre+"</option>";
+                    });
+                    $('#comboboxEstadoI').html(e);
+                }
+            });
+            
+        });
+        
+        $('#comboboxEstadoI').on('change',function (){
+            var EstadoId = $('#comboboxEstadoI option:selected').val();
+            $.ajax({
+                type: 'GET',
+                data: {EstadoId:EstadoId},
+                url: '@Url.Action("loadMunicipioI", "Proveedor")',
+                success: function (result)
+                {
+                    var e = "<option value='-1'>Selecciona el municipio</option>";
+                    $.each(result,function(index, value){
+                        e += "<option value='"+value.MunicipioId+"'>"+value.Nombre+"</option>";
+                    });
+                    $('#comboboxMunicipioI').html(e);
+                    
+                }
+            });
+        });
+
+        //Llamada al boton Guardar del Modal Insertar
+        $("#btnGuardar").on('click',function(){
+            var form = $("#frmNewCliente");
+            $.ajax({
+                url: '@Url.Action("Insert", "Proveedor")',
+                type: 'post',
+                cache: false,
+                data: form.serialize(),
+                success: function(result)
+                {
+                    $('#tabla div').remove();
+                    if(result)
+                    {
+                        $.each(result,function (i,valor)
+                        {
+                            var html = "<div class='row'>"
+                                            +"<div class='col-md-2'>"+valor.Nombre+"</div>"
+                                            +"<div class='col-md-2'>"+valor.Telefono+"</div>"
+                                            +"<div class='col-md-2'>"+valor.Extension+"</div>"
+                                            +"<div class='col-md-2'>"+valor.Celular+"</div>"
+                                            +"<div class='col-md-4'>"+
+                                              "<button type='button' class='btn btn-success btnEdit' id='"+valor.ProveedorId+"' name='btnEdit'>Editar</button>"+
+                                              "<button class='btn btn-danger btnDelete' id='"+valor.ProveedorId+"'>Eliminar</button>"
+                                            +"</div>"+
+                                        "</div>";
+                            $('#tabla').append(html);
+                        });
+                    }
+                }
+            });
+            $("#insProveedor").modal('hide');
+            return false;
+        });
+    });
+}

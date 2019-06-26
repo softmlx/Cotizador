@@ -1,0 +1,326 @@
+﻿@model IEnumerable<Cotizador.UI.Models.Moneda>
+
+@{
+    ViewBag.Title = "Moneda";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2>Moneda</h2>
+<p> </p>
+<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+    <!--<button class="btn btn-success" >@Html.ActionLink("Agregar Moneda", "Create", null, new { style = "color:white" })</button>-->
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#insMoneda">Agregar Moneda</button>
+
+</div>
+
+
+
+<div class="col-md-12"><p> </p></div>
+
+<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+    <div class="panel panel-default ">
+        <div class="panel-heading">
+            <div class="row text-center">
+                <div class="col-md-2 col-lg-2 col-sm-2 col-xs-2">NOMBRE</div>
+                <div class="col-md-2 col-lg-2 col-sm-2 col-xs-2">SIMBOLO</div>
+                <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1">CLAVE</div>
+                <div class="col-md-2 col-lg-2 col-sm-2 col-xs-2">VALOR</div>
+                <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1">ESTATUS</div>
+                <div class="col-md-4 col-lg-4 co4-sm-4 col-xs-4">OPCIONES</div>
+            </div>
+        </div>
+
+        <div class="panel-body text-center" id="elementoslista">
+            <div class="tabla" id="tabla">
+                @foreach (var iteam in Model)
+                {
+                    <div class="row">
+                        <div class="col-md-2 col-lg-2 col-sm-2 col-xs-2">@Html.DisplayFor(modelIteam => iteam.Nombre)</div>
+                        <div class="col-md-2 col-lg-2 col-sm-2 col-xs-2">@Html.DisplayFor(modelIteam => iteam.Simbolo)</div>
+                        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1">@Html.DisplayFor(modelIteam => iteam.Clave)</div>
+                        <div class="col-md-2 col-lg-2 col-sm-2 col-xs-2">@Html.DisplayFor(modelIteam => iteam.Valor)</div>
+                        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1">@Html.DisplayFor(modelIteam => iteam.Estatus)</div>
+                        <div class="col-md-4 col-md-4 col-lg-4 co4-sm-4 col-xs-4 center-block">
+                            <button type='button' class='btn btn-success btnEdit' id='@iteam.MonedaId' name='btnEdit'>Editar</button>
+                            <button class="btn btn-danger btnDelete" id="@iteam.MonedaId" name="btnDelete">Eliminar</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div>
+    <div class="modal fade" id="insMoneda" tabindex="-1" role="dialog" aria-labelledby="monModalLavel">
+        <form id="frmNewMoneda" method="post" action="Insert">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close cerrar" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">Nueva Moneda</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="form-group col-md-6 col-lg-6 col-sm-6 col-xs-6">
+                                <label for="recipient-name" class="col-form-label">Nombre</label>
+                                <input maxlength="30" pattern="[A-Za-z][^0-9]" type="text" placeholder="Nombre de la moneda" class="form-control" id="Nombre" name="Nombre" required>
+                            </div>
+                            <div class="form-group col-md-6 col-lg-6 col-sm-6 col-xs-6">
+                                <label for="recipient-name" class="col-form-label">Simbolo</label>
+                                <input maxlength="1" pattern="[.]" type="text" class="form-control" placeholder="Simbolo de la moneda" id="Simbolo" name="Simbolo" required>
+                            </div>
+                            <div class="form-group col-md-6 col-lg-6 col-sm-6 col-xs-6">
+                                <label for="recipient-name" class="col-form-label">Clave</label>
+                                <input maxlength="5" pattern="[A-Za-z]" type="text" class="form-control" placeholder="Clave de la moneda" id="Clave" name="Clave" required>
+
+                            </div>
+                            <div class="form-group col-md-6 col-lg-6 col-sm-6 col-xs-6">
+                                <label for="recipient-name" class="col-form-label">Valor</label>
+                                <input maxlength="10" min="0" title="Solo numeros" type="number" class="form-control" placeholder="Valor de la moneda" id="Valor" name="Valor" required>
+
+                            </div>
+                            <div class="custom-control custom-checkbox my-1 col-md-6 col-lg-6 col-sm-6 col-xs-6">
+                                <input type="checkbox" class="custom-checkbox" id="Estatus" name="Estatus" value="true">
+                                <label class="custom-contro-label" for="Estatus">Estatus</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default cerrar" data-dismiss="modal" aria-label="Close">Cancelar</button>
+                        <button type="button" class="btn btn-success" id="btnGuardar">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div>
+    <div class="modal fade" id="updMoneda" tabindex="-1" role="dialog" aria-labelledby="monModalLavel">
+        <div class="modal-dialog">
+            <form id="frmUpdMoneda" method="post" action="update">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close cerrarUpd" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">Editar Moneda</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row" id="updRowMoneda">
+                            <div></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default cerrarUpd" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success" id="btnActualizar">Actualizar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div>
+    <div class="modal fade" id="delMoneda" tabindex="-1" role="dialog" aria-labelledby="monModalLavel">
+        <div class="modal-dialog">
+            <form id="frmDelMoneda" method="post" action="update">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close cerrarUpd" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">Eliminar Moneda</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row" id="delRowMoneda">
+                            <div></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default cerrarDel" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success" id="btnAceptar">Aceptar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    $(document).ready(function(){
+        $(".cerrar").on('click',function(){
+            $("#insMoneda").modal('hide');
+        });
+        
+        $(".cerrarUpd").on('click',function(){
+            $("#updPais").modal('hide');
+        });
+
+        $("#btnGuardar").on('click',function(){
+            var form = $("#frmNewMoneda");
+            $.ajax({
+                url: '@Url.Action("Insert", "Moneda")',
+                type: 'post',
+                cache: false,
+                data: form.serialize(),
+                success: function(result){
+                                      
+                    //Validar
+                    if (result)
+                    {
+                        $('#tabla div').remove();
+                        $.each(result, function(i,valor)
+                        {
+                            var checked = '';
+                            if(valor.Estatus)
+                                checked = 'checked="checked"';
+                            var html = "<div class='row'>"
+                                    + "<div class='col-md-2 col-lg-2 col-sm-2 col-xs-2'>"+valor.Nombre+"</div>"
+                                    + "<div class='col-md-2 col-lg-2 col-sm-2 col-xs-2'>"+valor.Simbolo+"</div>"
+                                    + "<div class='col-md-1 col-lg-1 col-sm-1 col-xs-1'>"+valor.Clave+"</div>"
+                                    + "<div class='col-md-2 col-lg-2 col-sm-2 col-xs-2'>"+valor.Valor+"</div>"
+                                    + "<div class='col-md-1 col-lg-1 col-sm-1 col-xs-1'><input disabled type='checkbox' value='true' "+checked+" /></div>"
+                                    + "<div class='col-md-4 col-lg-4 col-sm-4 col-xs-4 center-block'>"
+                                        + "<button type='button' class='btn btn-success btnEdit' id='"+valor.MonedaId+"' name='btnEdit'>Editar</button>"
+                                        + "<button class='btn btn-danger btnDelete' id='"+valor.MonedaId+"' name='btnDelete'>Eliminar</button>"
+                                    +"</div>"
+                                    +"</div>";
+                            $('tabla').add(html);
+                            $('#tabla').append(html);
+                            $("#frmNewMoneda")[0].reset();
+                            $("#insMoneda").modal('hide');
+                        });
+                    } else{
+                        var aviso = alert("No se pudo guardar la informacion, verifique: \n 1. Hacen falta llenar campos. \n 2. El campo Valor es 0 o menor a este.");
+                    }
+                    
+                }
+            });
+            //Aqui estaba para desaparecer el modal
+            return false;
+        });
+
+
+        $("#tabla").on('click','button.btnEdit', function(){
+            $.ajax({
+                url: '@Url.Action("Edit", "Moneda")',
+                type: 'post',
+                cache: false,
+                data: {
+                    id : this.id,
+                },
+                success : function(result){
+                    $('#updRowMoneda div').remove();
+                    if(result){
+                        var checked = '';
+                            if(result[0].Estatus)
+                                checked = 'checked="checked"';
+                        var html = "<!--<div class='row'>-->"
+                                + "<div class='form-group'>"
+                                    + "<input type='hidden' class='form-control' id='MonedaId' name='MonedaId' value='"+result[0].MonedaId+"' />"
+                                + "</div>"
+                                + "<div class='form-group col-md-6'>"
+                                    + "<label for='recipient-name' class='col-form-label'>Nombre</label>"
+                                    + "<input type='text' class='form-control' placeholder='Nombre' id='Nombre' name='Nombre' value='"+result[0].Nombre+"' required/>"
+                                + "</div>"
+                                + "<div class='form-group col-md-6'>"
+                                    + "<label for='recipient-name' class='col-form-label'>Simbolo</label>"
+                                    + "<input type='text' class='form-control' placeholder='Simbolo' id='Simbolo' name='Simbolo' value='"+result[0].Simbolo+"' required />"
+                                + "</div>"
+                                + "<div class='form-group col-md-6'>"
+                                    + "<label for='recipient-name' class='col-form-label'>Clave</label>"
+                                    + "<input type='text' class='form-control' placeholder='Clave' id='Clave' name='Clave' value='"+result[0].Clave+"' required/>"
+                                + "</div>"
+                                + "<div class='form-group col-md-6'>"
+                                    + "<label for='recipient-name' class='col-form-label'>Valor</label>"
+                                    + "<input type='number' min='0' class='form-control' placeholder='Valor' id='Valor' name='Valor' value='"+result[0].Valor+"' required />"
+                                + "</div>"
+                                + "<div class='custom-control custom-checkbox my-1 col-md-6'>"
+                                    + "<input type='checkbox' id='Estatus' name='Estatus' value='true' "+checked+" />"
+                                    + "<label class='custom-contro-label' for='Estatus'>Estatus</label>"
+                                + "</div>"
+                            + "<!--</div>-->";
+                        
+                        $('#updRowMoneda').append(html);
+                        $('#updMoneda').modal('show');
+                    }
+                    if (result == false){
+                        var aviso = alert("No hemos podido obtener informacion.");
+                    }
+                }
+            });
+        });
+
+        $("#btnActualizar").on('click', function(){
+            var form = $("#frmUpdMoneda")
+            $.ajax({
+                url: '@Url.Action("Update", "Moneda")',
+                type: 'post',
+                cache: false,
+                data: form.serialize(),
+                success: function(result){
+                    
+                    //Validar
+                    if(result)
+                    {
+                        $('#tabla div').remove();
+                        $.each(result, function(i,valor)
+                        {
+                            var checked = '';
+                            if(valor.Estatus)
+                                checked = 'checked="checked"'
+                                var html = "<div class='row'>"
+                                    + "<div class='col-md-2 col-lg-2 col-sm-2 col-xs-2'>"+valor.Nombre+"</div>"
+                                    + "<div class='col-md-2 col-lg-2 col-sm-2 col-xs-2'>"+valor.Simbolo+"</div>"
+                                    + "<div class='col-md-1 col-lg-1 col-sm-1 col-xs-1'>"+valor.Clave+"</div>"
+                                    + "<div class='col-md-2 col-lg-2 col-sm-2 col-xs-2'>"+valor.Valor+"</div>"
+                                    + "<div class='col-md-1 col-lg-1 col-sm-1 col-xs-1'><input disabled type='checkbox' value='true' "+checked+" /></div>"
+                                    + "<div class='col-md-4 col-lg-4 col-sm-4 col-xs-4 center-block'>"
+                                        + "<button type='button' class='btn btn-success btnEdit' id='"+valor.MonedaId+"' name='btnEdit'>Editar</button> "
+                                        + " <button class='btn btn-danger btnDelete' id='"+valor.MonedaId+"' name='btnDelete'>Eliminar</button>"
+                                    +"</div>"
+                                    + "</div>";
+                            $('tabla').add(html);
+                            $('#tabla').append(html);
+                        });
+                        $("#updMoneda").modal('hide');
+                    }
+                    if (result == false){
+                        var aviso = alert("No se pudo guardar la informacion, verifique: \n 1. Hacen falta llenar campos. \n 2. El campo Valor es 0 o menor a este.");
+                    }
+                }
+                
+            });
+            
+            return false;
+        });
+
+        $("#tabla").on('click', 'button.btnDelete', function(){
+            var opcion = confirm("¿Desea eliminar esta moneda?");
+            if (opcion == true)
+            {
+                 $.ajax({
+                    url: '@Url.Action("Delete", "Moneda")',
+                    type: 'post',
+                    cache: false,
+                    data: { id : this.id,},
+                    success: function(result){
+                        $("#"+result).parent().parent().remove();
+                        if (result == false){
+                            var aviso = alert("No se pudo eliminar porque se esta utilizando");
+                        }
+                    }
+                });
+            }
+            return false;
+        });
+    });
+}

@@ -1,0 +1,84 @@
+.container{
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+.wizards{
+    overflow: hidden; 
+    position: relative; 
+    margin-top: 20px;
+}
+.progressbar{
+    position: absolute; 
+    top: 24px; 
+    left: 0; 
+    width: 100%; 
+    height: 1px; 
+    background: #ddd;
+}
+.progress-line{
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    height: 1px; 
+    background: #4baf50;
+}
+.form-wizard{
+    position: relative; 
+    float: left; 
+    width: 20%; 
+    padding: 0 5px; 
+    text-align: center;
+}
+.wizard-icon{
+    display: inline-block; 
+    width: 40px; 
+    height: 40px; 
+    margin-top: 4px; 
+    background: #ddd;
+	font-size: 16px; 
+    color: #fff; 
+    line-height: 40px;
+	-moz-border-radius: 50%; 
+    -webkit-border-radius: 50%; 
+    border-radius: 50%;
+}
+.form-wizard.activated .wizard-icon{
+    background: #fff; 
+    border: 1px solid #4baf50; 
+    color: #4baf50; 
+    line-height: 38px;
+}
+.form-wizard.active .wizard-icon{
+    width: 48px; 
+    height: 48px; 
+    margin-top: 0; 
+    background: #4baf50; 
+    font-size: 22px; 
+    line-height: 48px;
+}
+.form-wizard p { 
+    color: #ccc; 
+}
+.form-wizard.activated p { 
+    color: #4baf50; 
+}
+.form-wizard.active p { 
+    color: #4baf50; 
+}
+fieldset { 
+    display: none; 
+    text-align: left; 
+}
+.wizard-buttons { 
+    text-align: right; 
+}
+.input-error { 
+    border-color: red; 
+}
+.btn-previous{
+    background-color: lightgrey;
+}
+.btn-next{
+    background-color: #4baf50;
+    color: white;
+}

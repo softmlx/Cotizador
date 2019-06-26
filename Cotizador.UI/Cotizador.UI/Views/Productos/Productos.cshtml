@@ -1,0 +1,434 @@
+﻿@model IEnumerable<Cotizador.UI.Models.Product>
+@{
+    ViewBag.Title = "Productos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<button type="button" class="btn btn-success" data-toggle="modal" data-target="#agregarproducto">
+    <i class="fa fa-plus" aria-hidden="true"></i> Agregar Producto
+</button>
+<!--
+<a class="btn btn-success" href="Productos/agregarProductos">
+    <i class="fa fa-plus" aria-hidden="true"></i>
+    Agregar Categoría
+</a>
+-->
+<!--Modal agregar producto-->
+<div class="modal fade" id="agregarproducto" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"></button>
+                <h1 class="modal-title">Agregar producto</h1>
+            </div>
+            <div class="modal-body">
+                <form action="Insert" method="post" id="AgragarProducto">
+                    <div class="row col-lg-12">
+                        <div class="idcategoria form-group">
+
+                        </div>
+                        <div class="claveproducto form-group col-xl-3 col-lg-3 col-md-3">
+                            <label for="">Clave</label>
+                            <input class="form-control" type="text" placeholder="Clave del producto" name="Clave" required />
+                        </div>
+                        <div class="nombreproducto form-group col-xl-4 col-lg-4 col-md-4">
+                            <label for="nombre">Nombre</label>
+                            <input class="form-control" type="text" placeholder="Nombre del producto" name="Nombre" required />
+                        </div>
+                        <div class="describcoproductos form-group col-xl-12 col-lg-12 col-md-12">
+                            <label for="describcioncorto">Descripción corta</label>
+                            <textarea class="form-control" id="txtdescorta" placeholder="Descripción breve del producto" name="DescripcionCorta" rows="2" cols="4"></textarea>
+                        </div>
+                        <div class="describcompproductos form-group col-xl-12 col-lg-12 col-md-12">
+                            <label for="describcioncompleta">Descripción completa</label>
+                            <textarea class="form-control" id="txtdescompleta" placeholder="Descripción completa del producto" name="DescripcionCompleta" rows="5" cols="4"></textarea>
+                        </div>
+                        <div class="modeloproductos form-group col-xl-3 col-lg-3 col-md-3">
+                            <label for="modelo">Modelo</label>
+                            <input class="form-control" type="text" placeholder="Modelo del producto" name="modelo" required />
+                        </div>
+                        <div class="numserieproductos form-group col-xl-3 col-lg-3 col-md-3">
+                            <label for="numeroserie">Numero de serie</label>
+                            <input class="form-control" type="text" placeholder="Numero de serie" name="NumeroSerie" required />
+                        </div>
+                        <div class="codbarproductos form-group col-xl-3 col-lg-3 col-md-3">
+                            <label for="codigobar">Codigo de barras</label>
+                            <input class="form-control" type="text" placeholder="Codigo de barras del producto" name="CodigoBarras" required />
+                        </div>
+                        <div class="categoriaid form-group col-xl-2 col-lg-2 col-md-2">
+                            <label for="Estatus">Categoria id</label>
+                            <select class="form-control" name="CategoriaId" id="CategoriaList" required>
+                                @foreach (var catego in ViewBag.ListCategorias)
+                                {
+                                    <option value="@catego.CategoriaId">@catego.Nombre</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="categoriaidproducto form-group col-xl-2 col-lg-2 col-md-2">
+                            <label for="marca">Marca id</label>
+                            <select class="form-control" name="MarcaId" id="MarcaList" required>
+                                @foreach (var mar in ViewBag.ListMarca)
+                                {
+                                    <option value="@mar.MarcaId">@mar.Nombre</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="unimedidaproductos form-group col-xl-2 col-lg-2 col-md-2">
+                            <label for="unimedida">Unida de medida id</label>
+                            <select class="form-control" name="UnidadMedidaId" id="UniList" required>
+                                @foreach (var uni in ViewBag.ListUnimed)
+                                {
+                                    <option value="@uni.UnidadMedidaId">@uni.Nombre</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="estatusproductos form-group col-xl-3 col-lg-3 col-md-3">
+                            <label for="estatus">Estatus</label>
+                            <br />
+                            <input type="checkbox" name="Estatus" value="true" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="guardar-btn">Guardar</button>
+                        <button type="button" class="btn btn-danger cerrarIns" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p>    </p>
+
+<!--Tabla para mostrar los productos insertados-->
+<div class="panel panel-default">
+    <div class="panel-heading table table-striped">
+        <div class="row">
+            <div class="col-xs-2 col-lg-2 col-md-2 font-weight-bold">
+                Clave
+            </div>
+            <div class="col-xs-3 col-lg-3 col-md-3 font-weight-bold">
+                Nombre
+            </div>
+            <div class="col-xs-1 col-lg-1 col-md-1 font-weight-bold">
+                Estatus
+            </div>
+            <div class="col-xs-2 col-lg-2 col-md-2 font-weight-bold">
+                Modelo
+            </div>
+            <div class="col-xs-2 col-lg-2 col-md-2 font-weight-bold">
+                Numero de Serie
+            </div>
+            <div class="col-xs-2 col-lg-2 col-md-2 font-weight-bold">
+
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <!--Aqui va un for o algo que recorrera los datos-->
+        <div class="tabla" id="tabla">
+            @foreach (var p in Model)
+            {
+                <div class="row">
+                    <div class="col-xs-2 col-lg-2 col-md-2">
+                        @Html.DisplayFor(modelP => p.Clave)
+                    </div>
+                    <div class="col-xs-3 col-lg-3 col-md-3">
+                        @Html.DisplayFor(modelP => p.Nombre)
+                    </div>
+                    <div class="col-xs-1 col-lg-1 col-md-1">
+                        @Html.DisplayFor(modelP => p.Estatus)
+                    </div>
+                    <div class="col-xs-2 col-lg-2 col-md-2">
+                        @Html.DisplayFor(modelP => p.modelo)
+                    </div>
+                    <div class="col-xs-2 col-lg-2 col-md-2">
+                        @Html.DisplayFor(modelP => p.NumeroSerie)
+                    </div>
+                    <div class="col-xs-2 col-lg-2 col-md-2">
+                        <!--
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#editarproducto">
+                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#eliminarproducto">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                        </button>
+                        -->
+                        <button type="button" class="btn btn-success edit-btn" id="@p.ProductoId">Editar</button>
+                        <button type="button" class="btn btn-danger saveid-btn" id="@p.ProductoId">Eliminar</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!--Modal para actualizar una categoria-->
+<div class="modal fade" id="frmUpdProducto" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <form action="Update" method="post" id="ActualizarProducto">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close cerrarUpd" data-dismiss="modal"></button>
+                    <h1 class="modal-title">Editar Producto</h1>
+                </div>
+                <div class="modal-body">
+                    <div class="row" id="updRowProducto">
+                        <div></div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="btnActualizar">Guardar</button>
+                    <button type="button" class="btn btn-danger cerrarUpd" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--Modal para eliminar una categoria-->
+<div class="modal fade" id="eliminarconfirmacion" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"></button>
+                <h1 class="modal-title">¡Espera!</h1>
+            </div>
+            <div class="modal-body">
+                <h4>¿Esta seguro que desea eliminar esta categoria?</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success deletesbtn" id="deletes-btn">Si</button>
+                <button type="submit" class="btn btn-default" data-dismiss="modal" id="nodelete-btn">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    //<script>
+
+    $(document).ready(function(){
+        $(".cerrar").on('click',function(){
+            $("#agregarproducto").modal('hide');
+        });
+        $(".cerrarUpd").on('click', function(){
+            $("#frmUpdProducto").modal('hide');
+        });
+        $("#nodelete-btn").on('click', function(){
+            $("#eliminarconfirmacion").modal('hide');
+        });
+
+    //guardar datos desde el modal
+        $("#guardar-btn").on('click',function(){
+            var form = $("#AgragarProducto");
+            $.ajax({
+                url: '@Url.Action("Insert", "Productos")',
+                type: 'post',
+                cache: false,
+                data: form.serialize(),
+                success: function(result){
+                    $('#tabla div').remove();
+                    //Validar
+                    if(result)
+                    {
+                        $.each(result, function (i,valor)
+
+                    {
+                        var checked ='';
+                        if(valor.Estatus)
+                                checked = 'checked = "checked"';
+                            console.log(checked);
+                        var html = "<div class='row'>"
+                            +"<div class='col-xs-2 col-lg-2 col-md-2'>"+valor.Clave+"</div>"
+                            +"<div class='col-xs-3 col-lg-3 col-md-3'>"+valor.Nombre+"</div>"
+                            +"<div class='col-xs-1 col-lg-1 col-md-1'><input disabled type='checkbox' value='false' " + checked + "  /></div>"
+                            +"<div class='col-xs-2 col-lg-2 col-md-2'>"+valor.modelo+"</div>"
+                            +"<div class='col-xs-2 col-lg-2 col-md-2'>"+valor.NumeroSerie+"</div>"
+                            +"<div class='col-xs-2 col-lg-2 col-md-2'>"
+                                + "<button type='button' class='btn btn-success edit-btn' id='"+ valor.CategoriaId +"'> Editar </button>"
+                                + "<button type='button' class='btn btn-danger saveid-btn' id='"+ valor.CategoriaId +"'>Eliminar</button>"
+                            +"</div>"
+                        + "</div>";
+                        $('#tabla').append(html);
+                    });
+                    $("#AgragarProducto")[0].reset();
+                    $("#agregarproducto").modal('hide');
+                }
+            }
+        });
+        return false;
+    });
+    //llamando al modal para editar el dato
+        $("#tabla").on('click','button.edit-btn', function(){
+            $.ajax({
+                url: '@Url.Action("Edit", "Productos")',
+                type: 'post',
+                cache: false,
+                data: {
+                    id : this.id,
+                },
+            success: function(result){
+                $('#updRowProducto div').remove();
+                if(result)
+                {
+                    var checked ='';
+                        if(result[0].Estatus)
+                            checked = 'checked = "checked"';
+                            console.log(result[0].Estatus);
+                    var html = "<div class='claveproducto form-group col-xl-3 col-lg-3 col-md-3'>"
+                                +"<input class='form-control' type='hidden' name='ProductoId' value='"+ result[0].ProductoId +"' required />"
+                                +"<label for=''>Clave</label>"
+                                +"<input class='form-control' type='text' placeholder='Clave del producto' name='Clave' value='"+ result[0].Clave +"' required />"
+                        +"</div>"
+                        +"<div class='nombreproducto form-group col-xl-4 col-lg-4 col-md-4'>"
+                            +"<label for='nombre'>Nombre</label>"
+                            +"<input class='form-control' type='text' placeholder='Nombre del producto' name='Nombre' value='"+ result[0].Nombre +"' required />"
+                        +"</div>"
+                        +"<div class='describcoproductos form-group col-xl-12 col-lg-12 col-md-12'>"
+                            +"<label for='describcioncorto'>Descripción corta</label>"
+                            +"<textarea class='form-control' placeholder='Descripción breve del producto' name='DescripcionCorta' rows='2' cols='4'>"+ result[0].DescripcionCorta +"</textarea>"
+                        +"</div>"
+                        +"<div class='describcompproductos form-group col-xl-12 col-lg-12 col-md-12'>"
+                            +"<label for='describcioncompleta'>Descripción completa</label>"
+                            +"<textarea class='form-control' placeholder='Descripción completa del producto' name='DescripcionCompleta' rows='5' cols='4'>"+ result[0].DescripcionCompleta +"</textarea>"
+                        +"</div>"
+                        +"<div class='modeloproductos form-group col-xl-3 col-lg-3 col-md-3'>"
+                            +"<label for='modelo'>Modelo</label>"
+                            +"<input class='form-control' type='text' placeholder='Modelo del producto' name='modelo' value='"+ result[0].modelo +"' required />"
+                        +"</div>"
+                        +"<div class='numserieproductos form-group col-xl-3 col-lg-3 col-md-3'>"
+                            +"<label for='numeroserie'>Numero de serie</label>"
+                            +"<input class='form-control' type='text' placeholder='Numero de serie' name='NumeroSerie' value='"+ result[0].NumeroSerie +"' required />"
+                        +"</div>"
+                        +"<div class='codbarproductos form-group col-xl-3 col-lg-3 col-md-3'>"
+                            +"<label for='codigobar'>Codigo de barras</label>"
+                            +"<input class='form-control' type='text' placeholder='Codigo de barras del producto' name='CodigoBarras' value='"+ result[0].CodigoBarras +"' required />"
+                        +"</div>"
+                        +"<div class='categoriaid form-group col-xl-2 col-lg-2 col-md-2'>"
+                            +"<label for='Estatus'>Categoria id</label>"
+                            +"<select class='form-control' name='CategoriaId' id='CategoriaList2' required>"
+
+                            +"</select>"
+                        +"</div>"
+                        +"<div class='categoriaidproducto form-group col-xl-2 col-lg-2 col-md-2'>"
+                            +"<label for='marca'>Marca id</label>"
+                            +"<select class='form-control' name='MarcaId' id='MarcaList2' required>"
+
+                            +"</select>"
+                        +"</div>"
+                        +"<div class='unimedidaproductos form-group col-xl-2 col-lg-2 col-md-2'>"
+                            +"<label for='unimedida'>Unida de medida id</label>"
+                            +"<select class='form-control' name='UnidadMedidaId' id='UniList2' required>"
+
+                            +"</select>"
+                        +"</div>"
+                        +"<div class='estatusproductos form-group col-xl-3 col-lg-3 col-md-3'>"
+                            +"<label for='estatus'>Estatus</label>"
+                            +"<br />"
+                            +"<input type='checkbox' name='Estatus' value='true' "+checked+" />"
+                        +"</div>"
+                            +"</div>";
+                    $('#updRowProducto').append(html);
+                    $("#frmUpdProducto").modal('show');
+                    //Trayendo la lista de categoria del select y luego seleccionar el que coincida con el
+                    var listcat = document.getElementById('CategoriaList2');
+                    listcat.innerHTML = document.getElementById('CategoriaList').innerHTML; //con inner reutilizamos el componente del html ya creado
+                    for (var option of listcat.children) {
+                        //console.log(option.value);
+                        if (option.value == result[0].CategoriaId) {
+                            option.selected = "selected";
+                        }
+                    }
+                    //Trayendo la lista de unidad de medidas
+                    var listmed = document.getElementById('UniList2');
+                    listmed.innerHTML = document.getElementById('UniList').innerHTML;
+                    for (var option2 of listmed.children) {
+                        if (option2.value == result[0].UnidadMedidaId) {
+                            option2.selected = "selected";
+                            console.log(option2.value);
+                            console.log(result[0].UnidadMedidaId);
+                        }
+                    }
+                    //Trayendo la lista de Marca
+                    var listmar = document.getElementById('MarcaList2');
+                    listmar.innerHTML = document.getElementById('MarcaList').innerHTML;
+                    for (var option of listmar.children)
+                    {
+                        if (option.value == result[0].MarcaId)
+                        {
+                            option.selected = "selected";
+                        }
+                    }
+                }
+            }
+        });
+    });
+    //Actualizar un registro
+  $("#btnActualizar").on('click',function(){
+            var form = $("#ActualizarProducto");
+            $.ajax({
+                url: '@Url.Action("Update", "Productos")',
+                type: 'post',
+                cache: false,
+                data: form.serialize(),
+                success: function(result){
+                    $('#tabla div').remove();
+                    //Validar
+                    if(result)
+                    {
+                        $.each(result, function (i,valor){
+                            var checked ='';
+                            if(valor.Estatus)
+                                checked = 'checked = "checked"';
+                            var html = "<div class='row'>"
+                            +"<div class='col-xs-2 col-lg-2 col-md-2'>"+valor.Clave+"</div>"
+                            +"<div class='col-xs-3 col-lg-3 col-md-3'>"+valor.Nombre+"</div>"
+                            +"<div class='col-xs-1 col-lg-1 col-md-1'><input disabled type='checkbox' value='false' " + checked + "  /></div>"
+                            +"<div class='col-xs-2 col-lg-2 col-md-2'>"+valor.modelo+"</div>"
+                            +"<div class='col-xs-2 col-lg-2 col-md-2'>"+valor.NumeroSerie+"</div>"
+                            +"<div class='col-xs-2 col-lg-2 col-md-2'>"
+                                + "<button type='button' class='btn btn-success edit-btn' id='"+ valor.ProductoId +"'> Editar </button>"
+                                + "<button type='button' class='btn btn-danger saveid-btn' id='" + valor.ProductoId +"'>Eliminar</button>"
+                            +"</div>"
+                        + "</div>";
+                            $('#tabla').append(html);
+                        });
+                        $("#frmUpdProducto").modal('hide');
+                     }
+                }
+            });
+            return false;
+       });
+    //borrar un elemento
+        $("#tabla").on('click','button.saveid-btn', function(){
+            var ids = this.id;
+            console.log(ids)
+            console.log(`id : ${typeof(ids)}`);
+            $('.deletesbtn').data("id", ids);
+            $("#eliminarconfirmacion").modal('show');
+
+        });
+        $("#eliminarconfirmacion").on('click', 'button.deletesbtn', function () {
+
+            $("#eliminarconfirmacion").modal('hide');
+
+            $.ajax({
+                url: '@Url.Action("Delete", "Productos")',
+                type: 'post',
+                cache: false,
+                data: {
+                           id : $('.deletesbtn').data("id"),
+                    },
+                success: function(result){
+                        $("#"+ result).parent().parent().remove();
+                    }
+                });
+                return false;
+        });
+  });
+    //</script>
+}

@@ -1,0 +1,292 @@
+﻿@model  IEnumerable<Cotizador.UI.Models.BitRole>
+@{
+    ViewBag.Title = "Roles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<center><h1>ROLES</h1></center>
+
+<div class="row">
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#insRoles">
+    <i class="fa fa-plus" aria-hidden="true">
+        Agregar Rol</i></button>
+
+    <div class="panel panel-default">
+        <div class="panel-heading text-center table table-striped">
+            <div class="row">
+                <div class="col-md-5 text-center"><h4><b>ROL</b></h4></div>
+                <div class="col-md-5 text-center"><h4><b>DESCRIPCION</b></h4></div>
+                <div class="col-md-2 text-center"><h4><b>OPCIONES</b></h4></div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="tabla" id="tabla">
+                @foreach (var iteam in Model)
+                {
+                    <div class="row">
+                        <div class="col-md-5 text-center">
+                            @Html.DisplayFor(modelIteam => iteam.Name)
+                        </div>
+                        <div class="col-md-5 text-center">
+                            @Html.DisplayFor(modelIteam => iteam.DisplayName)
+                        </div>
+                        <div class="col-md-2 text-center">
+
+                            <button type="button" class="btn btn-success btnEdit" id="@iteam.BitRoleId" name="btnEdit">Editar</button>
+                            <button class="btn btn-danger btnDelete" id="@iteam.BitRoleId" name="btnDelete">Eliminar</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="insRoles" tabindex="-1" role="dialog" aria-labelledby="rolModalLabel">
+    <form id="frmRol" method="post" action="Insert">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close cerrar" data-dissmiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Menu nuevo Rol</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-5 text-center">
+                            <h5><b>Rol</b></h5><input type="text" class="form-control" placeholder="Rol" id="Name" name="Name" required="required">
+                        </div>
+                        <div class="col-md-5 text-center">
+                            <h5><b>Descripcion</b></h5><input type="text" class="form-control" placeholder="Descripcion" id="DisplayName" name="DisplayName" required="required">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="text-center">Permisos</div>
+                        @foreach (var permiso in ViewBag.ListaPermisos)
+                        {
+                            <div class="col-md-1 text-center">
+                                <input type="checkbox" name="ids" value="@permiso.BitPermissionId" class="checkbox" />@permiso.FriendlyName<br />
+                            </div>
+                        }
+                    </div>
+                    <br />
+                    <div id="alerta">
+                        <div></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default cerrar" data-dissmiss="modal">CERRAR</button>
+                    <button type="button" class="btn btn-success" id="btnGuardar">GUARDAR</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="updRoles" tabindex="-1" role="dialog" aria-labelledby="rolModalLabel">
+    <div class="modal-dialog modal-lg">
+        <form id="frmUpdRoles" method="post" action="Update">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close cerrarUpd" data-dissmiss="modal" aria-label="CANCELAR"><span aria-hidden="true">&times;</span></button>
+                    <h1 class="modal-title">EDITAR ROL</h1>
+                </div>
+                <div class="modal-body">
+                    <div class="row" id="updRowRoles">
+                        <div></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="text-center">Permisos</div>
+                    @foreach (var permiso in ViewBag.ListaPermisos)
+                    {
+                        <div class="perm col-md-1 text-center">
+                            <input type="checkbox" name="ids" id="@permiso.BitPermissionId" value="@permiso.BitPermissionId" class="checkbox" />@permiso.FriendlyName<br />
+                        </div>
+                    }
+                </div>
+                <div id="alertas">
+                    <div></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default cerrarUpd" data-dissmiss="modal" aria-label="close">Cancelar</button>
+                    <button type="button" class="btn btn-success" id="btnActualizar">Guardar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts
+{
+    $(document).ready(function()
+        {
+        $(".cerrar").on('click',function(){
+        $("#insRoles").modal('hide');
+        var element = document.getElementById("alertita").style.display = "none";
+         $("#frmRol")[0].reset();
+        });
+
+        $(".cerrarUpd").on('click',function(){
+        $("#updRoles").modal('hide');
+       var element = document.getElementById("alertitas").style.display = "none";
+         $("#frmUpdRoles")[0].reset();
+        });
+
+        $("#btnGuardar").on('click',function(){
+        var form = $("#frmRol");
+        $.ajax(
+        {
+        url: '@Url.Action("Insert", "Roles")',
+        type: 'post',
+        cache: false,
+        data: form.serialize(),
+        success: function(result){
+      
+        
+            if(result)
+            {
+               $('#tabla div').remove();
+                $.each(result, function (i,valor)
+                {
+                var html = "<div class='row'>"
+                +"<div class='col-md-5 text-center'>"+valor.Name+"</div>"
+                +"<div class='col-md-5 text-center'>"+valor.DisplayName+"</div>"
+                +"<div class='col-md-2'>"
+                +"<button type='button' class='btn btn-success btnEdit' id='"+valor.BitRoleId+"' name='Editar'>Editar</button>"
+                +"<button class='btn btn-danger btnDelete' id='"+  valor.BitRoleId +"'>Eliminar</button>"
+                +"</div>"
+                +"</div>";
+                $('#tabla').append(html);
+                });
+                 $("#insRoles").modal('hide');
+                $("#frmRol")[0].reset();
+             }
+               else
+            {
+                var htm = "<div class='alert alert-warning alert-dismissible' role='alert' id='alertita'>"
+                         +"<button type='button' class='close' data-dismiss='alert' aria-label='Close'>"
+                         +"<span aria-hidden='false'>×</span>"
+                         +"</button> <strong>Error</strong> llene y seleccione los campos."
+                         +"</div>";
+                        $('#alerta').html(htm); 
+            }
+            }
+            
+        
+      });
+    return false;
+    });
+    });
+        
+            $("#tabla").on('click','button.btnEdit', function(){
+                $.ajax(
+                {
+                url: '@Url.Action("Edit", "Roles")',
+                type:'post',
+                cache: false,
+                data:
+                {
+                    id:this.id,
+                },
+                    success:function(result)
+                    {
+                    $('#updRowRoles div').remove();
+                    if(result){
+                   
+                    $.each(result, function (i,valor)
+                    {
+                        var html = "<div class='col-md-5 text-center'>"
+                        +"<input type='hidden' class='form-control' placeholder='BitRoleId' id='BitRoleId' name='BitRoleId' value='"+ result[0].BitRoleId + "'>"
+                        +"<h5><b>ROL</b></h5><input type='text' class='form-control' placeholder='Name' id='Name' name='Name' value='"+ result[0].Name + "' required>"
+                        +"</div>"
+                        +"<div class='col-md-5 text-center'>"
+                        +"<h5><b>DESCRIPCION</b></h5><input type='text' class='form-control' placeholder='DisplayName' id='DisplayName' name='DisplayName' value='" + result[0].DisplayName + "'>"
+                        +"</div>"
+                        +"<div class='col-md-1 text-center'>" 
+                        +"</div>";
+                       
+                        $.each(result[0].BitRolePermission, function(index, valor)
+                        {
+                            $("#"+result[0].BitRolePermission[index].BitPermissionId)[0].checked = true;
+                         });
+                     $('#updRowRoles').html(html);
+                    $("#updRoles").modal('show');
+                    });
+                    }
+                    }
+                 });
+             });
+
+
+    $("#btnActualizar").on('click',function(){
+    var form = $("#frmUpdRoles");
+    $.ajax(
+    {
+        url: '@Url.Action("Update", "Roles")',
+        type: 'post',
+        cache: false,
+        data: form.serialize(),
+        success: function(result)
+        {
+            if(result)
+            {
+                $('#tabla div').remove();
+                $.each(result, function (i,valor)
+                {
+                var html = "<div class='row'>"
+                +"<div class='col-md-5 text-center'>"+valor.Name+"</div>"
+                +"<div class='col-md-5 text-center'>"+valor.DisplayName+"</div>"
+                +"<div class='col-md-2 text-center'>"
+                +"<button type='button' class='btn btn-success btnEdit' id='"+  valor.BitRoleId + "' name='Editar'>Editar</button>"
+                +"<button class='btn btn-danger btnDelete' id='"+ valor.BitRoleId +"'>Eliminar</button>"
+                +"</div>"
+                +"</div>";
+                $.each(result[0].BitRolePermission, function(index, valor)
+                        {
+                            $("#"+result[0].BitRolePermission[index].BitPermissionId)[0].checked = true;
+                         });
+                $('#tabla').append(html);         
+                $("#updRoles").modal('hide');
+            });
+        }
+        else
+        {
+                var htm = "<div class='alert alert-warning alert-dismissible' role='alert' id='alertitas'>"
+                         +"<button type='button' class='close' data-dismiss='alert' aria-label='Close'>"
+                         +"<span aria-hidden='false'>×</span>"
+                         +"</button> <strong>Error</strong> seleccione y llene los campos."
+                         +"</div>";
+                     $('#alertas').html(htm);
+        }
+    }
+    });
+ 
+    return false;
+    });
+
+    $("#tabla").on('click','button.btnDelete', function(){
+        $.ajax({
+            url: '@Url.Action("Delete", "Roles")',
+            type: 'post',
+            cache: false,
+            data: {id : this.id,},
+            success: function(result)
+                     {
+                        var opcion =  confirm("¿Desea eliminar este permiso?");
+                        var check = false;
+                        if(opcion ==true)
+                        {
+                        $("#"+ result).parent().parent().remove();
+                        check = true;
+                        }
+                        if(result == false)
+                        var aviso = alert("No se pudo eliminar este rol porque esta en uso")
+                    }
+             
+            
+        });
+        return false;
+    });
+}
+
+
+
+

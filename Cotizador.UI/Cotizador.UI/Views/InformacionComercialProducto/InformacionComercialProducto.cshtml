@@ -1,0 +1,397 @@
+﻿@model IEnumerable<Cotizador.UI.Models.InformacionComercialProducto>
+@{
+    ViewBag.Title = "InformacionComercialProducto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Información comercial de los productos</h1>
+
+
+<button type="button" class="btn btn-success" data-toggle="modal" data-target="#agregarinfoproducto">
+    <i class="fa fa-plus" aria-hidden="true"></i>
+    Agregar información comercial del producto
+</button>
+
+<!--
+<a class="btn btn-success" href="CategoriadeProductos/agregarCategoria">
+    <i class="fa fa-plus" aria-hidden="true"></i>
+    Agregar Categoría
+</a>
+-->
+<!--Modal agregar información del producto-->
+<div class="modal fade" id="agregarinfoproducto" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"></button>
+                <h1 class="modal-title">Agregar información comercial del producto</h1>
+            </div>
+            <div class="modal-body">
+                <form action="Insert" method="post" id="AgragarInfoproducto">
+                    <div class="row col-lg-12">
+                        <div class="idcategoria form-group">
+
+                        </div>
+                        <div class="costoinfoproducto form-group col-xl-3 col-lg-3 col-md-3">
+                            <label for="costo">Costo</label>
+                            <input class="form-control" type="text" placeholder="Costo del producto" name="Costo" required />
+                        </div>
+                        <div class="precioinfoproducto form-group col-xl-3 col-lg-3 col-md-3">
+                            <label for="precio">Precio</label>
+                            <input class="form-control" type="text" placeholder="Precio del producto" name="Precio" required />
+                        </div>
+                        <div class="margeninfoproducto form-group col-xl-6 col-lg-6 col-md-6">
+                            <label for="margen">Margen</label>
+                            <input class="form-control" type="text" placeholder="Margen del producto" name="Margen" required />
+                        </div>
+                        <div class="proveedorIdinfoproducto form-group col-xl-6 col-lg-6 col-md-6">
+                            <label for="proveedorId">Proveedor Id</label>
+                            <select class="form-control" name="ProveedorId" id="ProveList">
+                                @foreach (var prove in ViewBag.ListaProveedor)
+                                {
+                                    <option value="@prove.ProveedorId">@prove.Nombre</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="monedaIdinfoproducto form-group col-xl-6 col-lg-6 col-md-6">
+                            <label for="monedaId">Moneda Id</label>
+                            <select class="form-control" name="MonedaId" id="MonList">
+                                @foreach (var mone in ViewBag.ListaMoneda)
+                                {
+                                    <option value="@mone.MonedaId">@mone.Nombre</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="productoinfoproducto form-group col-xl-6 col-lg-6 col-md-6">
+                            <label for="productoId">Producto Id</label>
+                            <select class="form-control" name="ProductoId" id="ProList">
+                                @foreach (var prod in ViewBag.ListaProducto)
+                                {
+                                    <option value="@prod.ProductoId">@prod.Nombre</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="estatusinfoproducto form-group col-xl-2 col-lg-2 col-md-2">
+                            <label for="Estatus">Estatus</label>
+                            <br />
+                            <input type="checkbox" name="Estatus" value="true" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="guardar-btn">Guardar</button>
+                        <button type="button" class="btn btn-danger cerrar" data-dismiss="modal" id="guardar-btn">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p>    </p>
+
+<!--Tabla para mostrar los datos insertados-->
+<div class="panel panel-default">
+    <div class="panel-heading text-center table table-striped">
+        <div class="row">
+            <div class="col-xs-3 col-lg-3 col-md-3 font-weight-bold">
+                Producto Id
+            </div>
+            <div class="col-xs-2 col-lg-2 col-md-2 font-weight-bold">
+                Costo
+            </div>
+            <div class="col-xs-2 col-lg-2 col-md-2 font-weight-bold">
+                Precio
+            </div>
+            <div class="col-xs-2 col-lg-2 col-md-2 font-weight-bold">
+                Margen
+            </div>
+            <div class="col-xs-1 col-lg-1 col-md-1 font-weight-bold">
+                Estatus
+            </div>
+            <div class="col-xs-2 col-lg-2 col-md-2 font-weight-bold">
+
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <!--Aqui va un for o algo que recorrera los datos-->
+        <div class="tabla" id="tabla">
+            @foreach (var info in Model)
+            {
+
+                <div class="row">
+                    <div class="col-xs-3 col-lg-3 col-md-3">
+                        @Html.DisplayFor(modelInfo => info.ProductoId)
+                    </div>
+                    <div class="col-xs-2 col-lg-2 col-md-2">
+                        @Html.DisplayFor(modelInfo => info.Costo)
+                    </div>
+                    <div class="col-xs-2 col-lg-2 col-md-2">
+                        @Html.DisplayFor(modelInfo => info.Precio)
+                    </div>
+                    <div class="col-xs-2 col-lg-2 col-md-2">
+                        @Html.DisplayFor(modelInfo => info.Margen)
+                    </div>
+                    <div class="col-xs-1 col-lg-1 col-md-1">
+                        @Html.DisplayFor(modelInfo => info.Estatus)
+                    </div>
+                    <div class="col-xs-2 col-lg-2 col-md-2">
+                        <button type="button" class="btn btn-success edit-btn" id="@info.InformacionComercialProductoId" name="edit-btn"> Editar </button>
+                        <button type="button" class="btn btn-danger saveid-btn" id="@info.InformacionComercialProductoId" name="saveid-btn">Eliminar</button>
+
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!--Modal para actualizar una categoria-->
+<div class="modal fade" id="frmUpdInfoproducto" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <form action="Update" method="post" id="ActualizarInfoproducto">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close cerrarUpd" data-dismiss="modal"></button>
+                    <h1 class="modal-title">Editar información comercial del producto</h1>
+                </div>
+                <div class="modal-body">
+                    <div class="row" id="updRowInfoproducto">
+                        <div></div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="btnActualizar">Guardar</button>
+                    <button type="button" class="btn btn-danger cerrarUpd" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--Modal para eliminar una categoria-->
+<div class="modal fade" id="eliminarconfirmacion" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"></button>
+                <h1 class="modal-title">¡Espera!</h1>
+            </div>
+            <div class="modal-body">
+                <h4>¿Esta seguro que desea eliminar esta información?</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success deletesbtn" id="deletes-btn">Si</button>
+                <button type="submit" class="btn btn-default" data-dismiss="modal" id="nodelete-btn">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    //<script>
+
+    $(document).ready(function(){
+        $(".cerrar").on('click',function(){
+            $("#agregarinfoproducto").modal('hide');
+        });
+        $(".cerrarUpd").on('click', function(){
+            $("#frmUpdInfoproducto").modal('hide');
+        });
+        $("#nodelete-btn").on('click', function(){
+            $("#eliminarconfirmacion").modal('hide');
+        });
+
+    //guardar datos desde el modal
+        $("#guardar-btn").on('click',function(){
+            var form = $("#AgragarInfoproducto");
+            $.ajax({
+                url: '@Url.Action("Insert", "InformacionComercialProducto")',
+                type: 'post',
+                cache: false,
+                data: form.serialize(),
+                success: function(result){
+                    $('#tabla div').remove();
+                    //Validar
+                    if(result)
+                    {
+                        $.each(result, function (i,valor)
+
+                    {
+                        var checked ='';
+                        if(valor.Estatus)
+                            checked = 'checked = "checked"';
+                        var html = "<div class='row'>"
+                            +"<div class='col-xs-3 col-lg-3 col-md-3'>"+ valor.ProductoId +"</div>"
+                            +"<div class='col-xs-2 col-lg-2 col-md-2'>" + valor.Costo + "</div>"
+                            +"<div class='col-xs-2 col-lg-2 col-md-2'>"+ valor.Precio +"</div>"
+                            +"<div class='col-xs-2 col-lg-2 col-md-2'>"+ valor.Margen +"</div>"
+                            +"<div class='col-xs-1 col-lg-1 col-md-1'><input disabled type='checkbox' value='false' "+checked+"  /></div>"
+                            +"<div class='col-xs-2 col-lg-2 col-md-2'>"
+                                + "<button type='button' class='btn btn-success edit-btn' id='"+ valor.InformacionComercialProductoId +"'> Editar </button>"
+                                + "<button type='button' class='btn btn-danger saveid-btn' id='"+ valor.InformacionComercialProductoId +"'>Eliminar</button>"
+                            +"</div>"
+                        + "</div>";
+                        $('#tabla').append(html);
+                    });
+                    $("#AgragarInfoproducto")[0].reset();
+                    $("#agregarinfoproducto").modal('hide');
+                }
+            }
+        });
+        return false;
+    });
+    //llamando al modal para editar el dato
+        $("#tabla").on('click','button.edit-btn', function(){
+            $.ajax({
+                url: '@Url.Action("Edit", "InformacionComercialProducto")',
+                type: 'post',
+                cache: false,
+                data: {
+                    id : this.id,
+                },
+            success: function(result){
+                $('#updRowInfoproducto div').remove();
+                if(result)
+                {
+                    var checked ='';
+                        if(result[0].Estatus)
+                            checked = 'checked = "checked"';
+                    var html ="<div class='costoinfoproducto form-group col-xl-3 col-lg-3 col-md-3'>"
+                            +"<label for='costo'>Costo</label>"
+                            +"<input class='form-control' type='text' placeholder='Costo del producto' name='Costo' value='"+ result[0].Costo +"' required />"
+                        +"</div>"
+                        +"<div class='precioinfoproducto form-group col-xl-3 col-lg-3 col-md-3'>"
+                            +"<label for='precio'>Precio</label>"
+                            +"<input class='form-control' type='text' placeholder='Precio del producto' name='Precio' value='"+ result[0].Precio +"' required />"
+                        +"</div>"
+                        +"<div class='margeninfoproducto form-group col-xl-6 col-lg-6 col-md-6'>"
+                            +"<label for='margen'>Margen</label>"
+                            +"<input class='form-control' type='text' placeholder='Margen del producto' name='Margen' value='"+ result[0].Margen +"' required />"
+                        +"</div>"
+                        +"<div class='proveedorIdinfoproducto form-group col-xl-6 col-lg-6 col-md-6'>"
+                            +"<label for='proveedorId'>Proveedor Id</label>"
+                            +"<select class='form-control' name='ProveedorId' id='ProveList2'>"
+                                
+                            +"</select>"
+                        +"</div>"
+                        +"<div class='monedaIdinfoproducto form-group col-xl-6 col-lg-6 col-md-6'>"
+                            +"<label for='monedaId'>Moneda Id</label>"
+                            +"<select class='form-control' name='MonedaId' id='MonList2'>"
+                                
+                            +"</select>"
+                        +"</div>"
+                        +"<div class='productoinfoproducto form-group col-xl-6 col-lg-6 col-md-6'>"
+                            +"<label for='productoId'>Producto Id</label>"
+                            +"<select class='form-control' name='ProductoId' id='ProList2'>"
+                                
+                            +"</select>"
+                        +"</div>"
+                        +"<div class='estatusinfoproducto form-group col-xl-2 col-lg-2 col-md-2'>"
+                            +"<label for='Estatus'>Estatus</label>"
+                            +"<br />"
+                            +"<input type='checkbox' name='Estatus' value='true' />"
+                        +"</div>";
+                    $('#updRowInfoproducto').append(html);
+                    $("#frmUpdInfoproducto").modal('show');
+                    //ver Lista de proveedores
+                    var listprov = document.getElementById('ProveList2');
+                    listprov.innerHTML = document.getElementByid('ProveList').innerHTML;
+                    for (var option of listprov.children)
+                    {
+                        if (option.value == result[0].ProveedorId)
+                        {
+                            option.selected = "selected";
+                        }
+                    }
+                    //ver Lista de Moneda
+                    var listmon = document.getElementById('MonList2');
+                    listmon.innerHTML = document.getElementById('MonList').innerHTML;
+                    for (option of listmon.children)
+                    {
+                        if (option.value == result[0].MonedaId)
+                        {
+                            option.selected = 'selected';
+                        }
+                    }
+                    //ver Lista de producto
+                    var listpro = document.getElementById('ProList2');
+                    listpro.innerHTML = document.getElementById('ProList').innerHTML;
+                    for (var option of listpro.children)
+                    {
+                        if (option.value == result[0].ProductoId)
+                        {
+                            option.selected = 'selected';
+                        }
+                    }
+                }
+            }
+        });
+    });
+    //Actualizar un registro
+  $("#btnActualizar").on('click',function(){
+            var form = $("#ActualizarInfoproducto");
+            $.ajax({
+                url: '@Url.Action("Update", "InformacionComercialProducto")',
+                type: 'post',
+                cache: false,
+                data: form.serialize(),
+                success: function(result){
+                    $('#tabla div').remove();
+                    //Validar
+                    if(result)
+                    {
+                        $.each(result, function (i,valor){
+                            var checked ='';
+                            if(valor.Estatus)
+                                checked = 'checked = "checked"';
+                            var html = "<div class='row'>"
+                            +"<div class='col-xs-3 col-lg-3 col-md-3'>"+ valor.ProductoId +"</div>"
+                            +"<div class='col-xs-2 col-lg-2 col-md-2'>" + valor.Costo + "</div>"
+                            +"<div class='col-xs-2 col-lg-2 col-md-2'>"+ valor.Precio +"</div>"
+                            +"<div class='col-xs-2 col-lg-2 col-md-2'>"+ valor.Margen +"</div>"
+                            +"<div class='col-xs-1 col-lg-1 col-md-1'><input disabled type='checkbox' value='false' "+checked+"  /></div>"
+                            +"<div class='col-xs-2 col-lg-2 col-md-2'>"
+                                + "<button type='button' class='btn btn-success edit-btn' id='"+ valor.InformacionComercialProductoId +"'> Editar </button>"
+                                + "<button type='button' class='btn btn-danger saveid-btn' id='"+ valor.InformacionComercialProductoId +"'>Eliminar</button>"
+                            +"</div>"
+                        + "</div>";
+                            $('#tabla').append(html);
+                        });
+                        $("#frmUpdInfoproducto").modal('hide');
+                     }
+                }
+            });
+            return false;
+       });
+    //borrar un elemento
+        $("#tabla").on('click','button.saveid-btn', function(){
+            var ids = this.id;
+            console.log(`id : ${typeof(ids)}`);
+            $('.deletesbtn').data("id", ids);
+            $("#eliminarconfirmacion").modal('show');
+
+        });
+        $("#eliminarconfirmacion").on('click', 'button.deletesbtn', function () {
+
+            $("#eliminarconfirmacion").modal('hide');
+
+            $.ajax({
+                url: '@Url.Action("Delete", "InformacionComercialProducto")',
+                type: 'post',
+                cache: false,
+                data: {
+                           id : $('.deletesbtn').data("id"),
+                    },
+                success: function(result){
+                        $("#"+ result).parent().parent().remove();
+                    }
+                });
+                return false;
+        });
+  });
+    //</script>
+}

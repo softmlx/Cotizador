@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
+    <link rel="stylesheet" href="~/css/AdminLTE.css">
+    <link rel="stylesheet" href="~/css/style.css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/skin-blue.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    @RenderSection("Styles", required: false)
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper">
+        <header class="main-header">
+            <a href="" class="logo">
+                <span class="logo-mini"><b>P</b></span>
+                <span class="logo-lg"><b>Pochteca</b></span>
+            </a>
+            <nav class="navbar navbar-static-top" role="navigation">
+                <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                    <span class="sr-only"></span>
+                </a>
+            </nav>
+        </header>
+        <aside class="main-sidebar">
+            <section class="sidebar">
+                <ul class="sidebar-menu" data-widget="tree">
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-file-text-o"></i> <span>Cotizaciones</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="/Cotizacions">Cotizaciones</a></li>
+                            <li><a href="#">Clonación</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/Cliente"><i class="fa fa-users"></i> <span>Clientes</span></a></li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-folder"></i><span>Productos</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="/CategoriadeProductos">Categoria de Productos</a></li>
+                            <li><a href="/Productos">Productos</a></li>
+                            <li><a href="/Costos">Costos</a></li>
+                            <li><a href="#">Importador</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/Proveedores"><i class="fa fa-user"></i> <span>Proveedores</span></a></li>
+                    <li><a href="/Moneda"><i class="fa fa-money"></i> <span>Moneda</span></a></li>
+                    <li><a href="#"><i class="fa fa-tags"></i> <span>Categorías</span></a></li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-shield"></i> <span>Seguridad</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="/Usuario">Usuarios</a></li>
+                            <li><a href="/Roles">Roles</a></li>
+                            <li><a href="/Permisos">Permisos</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#"><i class="fa fa-sign-out"></i> <span>Salir</span></a></li>
+                </ul>
+            </section>
+        </aside>
+
+        <div class="content-wrapper">
+            <section class="content-header"></section>
+            <section class="content container-fluid">
+                <!-----------------------------------------
+                  | Colocar el contenido de la pagina aqui |
+                  ----------------------------------------->
+                @RenderBody()
+            </section>
+        </div>
+
+        <footer class="main-footer">
+            <!-- Colocar datos de footer -->
+            <strong>Copyright &copy;  @DateTime.Now.Year <a href="#">BitEngine</a>.</strong> All rights reserved.
+        </footer>
+    </div>
+    @RenderSection("ImportScripts", required: false)
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/adminlte.min.js"></script>
+    <script src="~/Scripts/1.js"></script>
+    <script src="~/Scripts/2.js"></script>
+    <script src="~/Scripts/3.js"></script>
+    <script>
+    @RenderSection("Scripts", required:false)
+    </script>
+</body>
+</html>

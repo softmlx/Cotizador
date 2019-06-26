@@ -1,0 +1,275 @@
+﻿@model IEnumerable<Cotizador.UI.Models.BitPermission>
+@{
+    ViewBag.Title = "Permisos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<center><h1>PERMISOS</h1></center>
+
+<div class="row">
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#insPermiso">
+    <i class="fa fa-plus" aria-hidden="true">
+        Agregar Permiso</i>
+    </button>
+        <div class="panel panel-default">
+            <div class="panel-heading text-center table table-striped">
+                <div class="row">
+                    <div class="col-md-5 text-center"><h4><b>PERMISOS</b></h4></div>
+                    <div class="col-md-5 text-center"><h4><b>GRUPO</b></h4></div>
+                    <div class="col-md-2 text-center"><h4><b>OPCIONES</b></h4></div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="tabla" id="tabla">
+                    @foreach (var iteam in Model)
+                    {
+                        <div class="row">
+                            <div class="col-md-5 text-center hidden-md-down font-weight-bold">
+                                @Html.DisplayFor(modelIteam => iteam.FriendlyName)
+                            </div>
+                            <div class="col-md-5 text-center hidden-md-down font-weight-bold">
+                                @Html.DisplayFor(modelIteam => iteam.GroupedBy)
+                            </div>
+
+                            <div class="col-md2">
+                                <button type="button" class="btn btn-success btnEdit" id="@iteam.BitPermissionId" name="btnEdit">Editar</button>
+                                <button class="btn btn-danger btnDelete" id="@iteam.BitPermissionId" name="btnDelete">Eliminar</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+</div>
+  
+<div class="modal fade" id="insPermiso" tabindex="-1" role="dialog" aria-labelledby="rolModalLabel">
+    <form id="frmPermiso" method="post" action="Insert">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close cerrar" data-dissmiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h1 class="modal-title">MENU NUEVO PERMISO</h1>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+
+                        <div class="col-md-5 text-center">
+                            <h5><b>PERMISO</b></h5>
+                            <input type="text" class="form-control" placeholder="PERMISO" id="FriendlyName" name="FriendlyName" required="required">
+                        </div>
+                        <div class="col-md-5 text-center">
+                            <h5><b>GRUPO</b></h5><input type="text" class="form-control" placeholder="GRUPO" id="GroupedBy" name="GroupedBy">
+                        </div>
+                    </div>
+                    <br />
+                    <div id="alerta">
+                        <div></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default cerrar" data-dissmiss="modal">CERRAR</button>
+                    <button type="button" class="btn btn-success" id="btnGuardar">GUARDAR</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="updPermiso" tabindex="-1" role="dialog" aria-labelledby="permisoModalLabel">
+    <div class="modal-dialog">
+        <form id="frmUpdPermiso" method="post" action="Update">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close cerrarUpd" data-dissmiss="modal" aria-label="CANCELAR"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">EDITAR PERMISO</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row" id="updRowPermiso">
+                        <div></div>
+                    </div>
+                    <br />
+                
+                    <div id="alertas">
+                        <div></div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default cerrarUpd" data-dissmiss="modal" aria-label="close">Cancelar</button>
+                    <button type="button" class="btn btn-success" id="btnActualizar">Guardar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+@section Scripts
+{
+    $(document).ready(function()
+    {
+        $(".cerrar").on('click',function(){
+            $("#insPermiso").modal('hide');
+          
+            var element = document.getElementById("alertita").style.display = "none";
+             $("#frmPermiso")[0].reset();
+
+        });
+
+    $(".cerrarUpd").on('click',function(){
+        $("#updPermiso").modal('hide');
+        var element = document.getElementById("alertitas").style.display = "none";
+         $("#frmUpdPermiso")[0].reset();
+    });
+
+    $("#btnGuardar").on('click',function(){
+        var form = $("#frmPermiso");
+        $.ajax(
+        {
+            
+            url: '@Url.Action("Insert", "Permisos")',
+            type: 'post',
+            cache: false,
+            data: form.serialize(),
+            success: function(result){
+           
+                if(result)
+                {
+                     $('#tabla div').remove();
+                    $.each(result, function (i,valor)
+                    {
+                    var html = "<div class='row'>"
+                    +"<div class='col-md-5 text-center'>"+valor.FriendlyName+"</div>"
+                    +"<div class='col-md-5 text-center'>"+valor.GroupedBy+"</div>"
+                    +"<div class='col-mm-2 text-center'>"
+                    +"<button type='button' class='btn btn-success btnEdit' id='" +valor.BitPermissionId +"' name='Editar'>Editar</button>"
+                    + "<button class='btn btn-danger btnDelete' id='"+ valor.BitPermissionId +"'>Eliminar</button>"
+                    +"</div>"
+                    +"</div>";
+                    $('#tabla').append(html);
+                    });
+                    $("#insPermiso").modal('hide');
+                    $("#frmPermiso")[0].reset();
+                }else
+                {
+                var htm = "<div class='alert alert-warning alert-dismissible' role='alert' id='alertita'>"
+                         +"<button type='button' class='close' data-dismiss='alert' aria-label='Close'>"
+                         +"<span aria-hidden='false'>×</span>"
+                         +"</button> <strong>Error</strong> llene los campos."
+                         +"</div>";
+                     $('#alerta').html(htm);
+               
+                }   
+        }
+
+    });
+
+    return false;
+    });
+});
+
+   $("#tabla").on('click','button.btnEdit', function(){
+        $.ajax(
+        {
+            url: '@Url.Action("Edit", "Permisos")',
+            type:'post',
+            cache: false,
+            data:
+            {
+                id:this.id,
+            },
+                success:function(result)
+                {
+                $('updRowPermiso div').remove();
+                    if(result)
+                    {
+                   
+                    $.each(result, function (i,valor)
+                       {
+                        var html = "<div class='col-md-5 text-center'>"
+                        +"<input type='hidden' class='form-control' placeholder='BitPermissionId' id='BitPermissionId' name='BitPermissionId' value='"+ result[0].BitPermissionId + "'>"
+                        +"<h5><b>PERMISO</b></h5><input type='text' class='form-control' placeholder='PERMISO' id='FriendlyName' name='FriendlyName' value='"+ result[0].FriendlyName + "'>"
+                        +"</div>"
+                        +"<div class='col-md-5 text-center'>" 
+                        +"<h5><b>GRUPO</b></h5><input type='text' class='form-control' placeholder='GRUPO' id='GroupedBy' name='GroupedBy' value='" + result[0].GroupedBy + "'>"
+                        +"</div>";
+                        $('#updRowPermiso').html(html);
+                        $("#updPermiso").modal('show');
+                        });
+                     }
+            }
+
+    });
+        
+    });
+
+
+       $("#btnActualizar").on('click',function(){
+            var form = $("#frmUpdPermiso");
+            $.ajax({
+                url: '@Url.Action("Update", "Permisos")',
+                type: 'post',
+                cache: false,
+                data: form.serialize(),
+                success: function(result){
+
+                    if(result)
+                    {
+                      $('#tabla div').remove();
+                        $.each(result, function (i,valor)
+                        {
+                                var html = "<div class='row'>"
+                                + "<div class='col-sm-5 text-center'>"+valor.FriendlyName+"</div>"
+                                + "<div class='col-sm-5 text-center'>"+valor.GroupedBy+"</div>"
+                                + "<div class='col-sm-2 text-center'>"
+                                +  "<button type='button' class='btn btn-success btnEdit' id='"+valor.BitPermissionId + "' name='Editar'>Editar</button>"
+                                + "<button class='btn btn-danger btnDelete' id='"+valor.BitPermissionId +"'>Eliminar</button>"
+                                +  "</div>"
+                                +  "</div>";
+                            $('#tabla').append(html);
+                        });
+                    $("#updPermiso").modal('hide');
+    
+                     }else
+                    {
+                        var htm = "<div class='alert alert-warning alert-dismissible' role='alert' id='alertitas'>"
+                         +"<button type='button' class='close' data-dismiss='alert' aria-label='Close'>"
+                         +"<span aria-hidden='false'>×</span>"
+                         +"</button> <strong>Error</strong> llene los campos."
+                         +"</div>";
+                     $('#alertas').html(htm);
+                    }
+                      
+                }
+            });
+            return false;
+       });
+   
+      $("#tabla").on('click','button.btnDelete', function(){
+            $.ajax({
+                url: '@Url.Action("Delete", "Permisos")',
+                type: 'post',
+                cache: false,
+                data: {
+                           id : this.id,
+                    },
+                success: function(result){
+                        var opcion =  confirm("¿Desea eliminar este permiso?");
+                        var check = false;
+                        if(opcion ==true)
+                        {
+                        $("#"+ result).parent().parent().remove();
+                        check = true;
+                        }
+                        if(result == false)
+                        var aviso = alert("No se pudo eliminar este permiso porque esta en uso")
+                    }
+                });
+                return false;        
+        });
+
+    
+    }

@@ -1,0 +1,203 @@
+﻿@model IEnumerable<Cotizador.UI.Models.Pai>
+@{
+    ViewBag.Title = "Países";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <center><h2>Paises</h2></center>
+    <!--Agregando la llamada al modal de nuevo-->
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#insPais">Nuevo</button>
+    <div class="panel panel success">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-1 text-center"><h4>Clave</h4></div>
+                <div class="col-md-3 text-center"><h4>Nombre</h4></div>
+                <div class="col-md-4"></div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="tabla" id="tabla">
+                @foreach (var item in Model)
+                {
+                    <div class="row">
+                        <div class="col-md-1 text-center">
+                            @Html.DisplayFor(modelIteam => item.Clave)
+                        </div>
+                        <div class="col-md-3">
+                            @Html.DisplayFor(modelIteam => item.Nombre)
+                        </div>
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-success btnEdit" id="@item.PaiId" name="btnEdit">Editar</button>
+                            <button class="btn btn-success">@Html.ActionLink("ELIMINAR", "Delete", new { id = item.PaiId })</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="insPais" tabindex="-1" role="dialog" ariallabeledby="PaisModalLabel">
+    <div class="modal-dialog modal-lg">
+        <form id="frmNewPais" method="post" action="insert">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close cerrar" data-dissmiss="modal" aria-label="close">&times;</button>
+                    <h4 class="modal-title"> Nuevo País</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-md-2 col-lg-2 col-xs-2">
+                            <h5><b>Clave</b></h5><input type="text" class="form-control" placeholder="Clave" id="Clave" name="Clave" required>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-xs-4">
+                            <h5><b>Nombre</b></h5><input type="text" class="form-control" placeholder="Nombre" id="Nombre" name="Nombre">
+                        </div>
+
+                    </div>
+            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default cerrar" data-dissmiss="modal">close</button>
+                    <button type="button" class="btn btn-success" id="btnGuardar">Guardar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal fade" id="updPais" tabindex="-1" role="dialog" ariallabeledby="PaisModalLabel">
+    <div class="modal-dialog modal-lg">
+        <form id="frmUpdPais" method="post" action="update">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close cerrarUpd" data-dissmiss="modal" aria-label="close">&times;</button>
+                    <h4 class="modal-title"> Editar País</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row" id="updRowPais">
+                        <div></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default cerrarUpd" data-dissmiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-success" id="btnActualizar">Guardar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    $(document).ready(function(){
+        $(".cerrar").on('click',function(){
+            $("#insPais").modal('hide');
+        });
+        $(".cerrarUpd").on('click',function(){
+            $("#updPais").modal('hide');
+        });
+        $("#btnGuardar").on('click',function(){
+            var form = $("#frmNewPais");
+            $.ajax({
+                url: '@Url.Action("Insert", "Pais")',
+                type: 'post',
+                cache: false,
+                data: form.serialize(),
+                success: function(result){
+                    $('#tabla div').remove();
+                    //Validar
+                    if(result)
+                    {
+                        $.each(result, function (i,valor)
+                        {
+                            var html = "<div class='row'>"
+                                     +   "<div class='col-sm-1'>"+valor.Clave+"</div>"
+                                    + "<div class='col-sm-3'>"+valor.Nombre+"</div>"
+                                    + "<div class='col-sm-4'>"
+                                        +  "<button type='button' class='btn btn-success' id='btnEdit' name='Editar'>Editar</button>"
+                                        + "<button class='btn btn-success'>Eliminar</button>"
+                                        +  "</div>"
+                                        +  "</div>";
+                            $('#tabla').append(html);
+                        });
+                        $("#insPais").modal('hide');
+                    }
+                }
+            });
+            return false;
+        });
+        $(".btnEdit").on('click',function(){
+            $.ajax({
+                url: '@Url.Action("Edit", "Pais")',
+                type: 'post',
+                cache: false,
+                data: {
+                           id : this.id,
+                    },
+                success: function(result){
+                        $('#updRowPais div').remove();
+                        if(result)
+                        {
+                             var html = "<div class='col-md-2 col-lg-2 col-xs-2'>"
+                                            +"<h5><b>Clave</b></h5><input type='text' class='form-control' placeholder='Clave' id='Clave' name='Clave' value='"+ result[0].Clave + "' required>"
+                                            +"</div>"
+                                            +"<div class='col-md-4 col-lg-4 col-xs-4'>"
+                                                +"<h5><b>Nombre</b></h5><input type='text' class='form-control' placeholder='Nombre' id='Nombre' name='Nombre' value='"+ result[0].Nombre + "'>"
+                                            +"</div>";
+                            $('#updRowPais').append(html);
+                            $("#updPais").modal('show');
+                        }
+                    }
+                });
+         });
+
+    $("#btnActualizar").on('click',function(){
+            var form = $("#frmUpdPais");
+            $.ajax({
+                url: '@Url.Action("Update", "Pais")',
+                type: 'post',
+                cache: false,
+                data: form.serialize(),
+                success: function(result){
+                    $('#tabla div').remove();
+                    //Validar
+                    if(result)
+                    {
+                        $.each(result, function (i,valor){
+                            var html = "<div class='row'>"
+                                + "<div class='col-sm-1'>"+valor.Clave+"</div>"
+                                + "<div class='col-sm-3'>"+valor.Nombre+"</div>"
+                                + "<div class='col-sm-4'>"
+                                    +  "<button type='button' class='btn btn-success btnEdit' id='"
+                                    +  valor.PaiId + "' name='Editar'>Editar</button>"
+                                    + "<button class='btn btn-success btnDelete' id='"
+                                    +  valor.PaiId +"'>Eliminar</button>"
+                                    +  "</div>"
+                                    +  "</div>";
+                            $('#tabla').append(html);
+                        });
+                     }
+                }
+            });
+            return false;
+       });
+
+    //borrar un elemento
+        $("#tabla").on('click','button.btnDelete', function(){
+            $.ajax({
+                url: '@Url.Action("Delete", "Pais")',
+                type: 'post',
+                cache: false,
+                data: {
+                           id : this.id,
+                    },
+                success: function(result){
+
+                        //var id=eval(result);
+                        $("#"+ result).parent().parent().remove();
+                    }
+                });
+                return false;
+        });
+    });
+
+}

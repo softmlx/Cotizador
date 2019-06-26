@@ -1,0 +1,35 @@
+﻿@model Cotizador.UI.Models.BitRole
+@{ 
+    ViewBag.Title = "RolesEditar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>RolesEditar</h2>
+
+<form class="navbar-form navbar-center" action="/Roles/Update/@Model.BitRoleId" method="post">
+    <div class="row">
+        <div class="col-md-3 col-lg-3 col-xs-3"></div> 
+        <input type="hidden" value="@Model.BitRoleId" name="BitRoleId" id="BitRoleId"/>
+        <div class="col-md-3 col-lg-2 col-xs-3">
+            <h5><b>Rol</b></h5><input type="text" class="form-control" id="Name" name="Name" required value="@Model.Name" />
+        </div>
+
+
+        <div class="col-md-4 col-lg-4 col-xs-4">
+            <h5><b>Descripcion</b></h5><input type="text" class="form-control" id="DisplayName" name="DisplayName" value="@Model.DisplayName">
+
+        </div>
+        <div class="col-md-3 col-lg-3 col-xs-3">
+
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-4"></div>
+        <h5><b>Permisos</b></h5><input type="checkbox" class="form-control" placeholder="Descripcion" id="BitPermissionId" name="BitPermissionId">
+        </div>
+        <div class="col-md-3">
+            
+            <button>@Html.ActionLink("CANCELAR", "Index")</button>
+            <input type="submit" value="GUARDAR" class="btn btn-success" />
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</form>

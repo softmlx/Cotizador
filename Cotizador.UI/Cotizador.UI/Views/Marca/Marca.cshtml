@@ -1,0 +1,309 @@
+﻿@model IEnumerable<Cotizador.UI.Models.Marca>
+@{
+    ViewBag.Title = "Marca";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Marcas</h1>
+
+
+<button type="button" class="btn btn-success" data-toggle="modal" data-target="#agregarmarca">
+    <i class="fa fa-plus" aria-hidden="true"></i>
+    Agregar marca
+</button>
+
+<!--
+<a class="btn btn-success" href="CategoriadeProductos/agregarCategoria">
+    <i class="fa fa-plus" aria-hidden="true"></i>
+    Agregar Categoría
+</a>
+-->
+<!--Modal agregar marca-->
+<div class="modal fade" id="agregarmarca" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"></button>
+                <h1 class="modal-title">Agregar marca</h1>
+            </div>
+            <div class="modal-body">
+                <form action="Insert" method="post" id="AgragarMarca">
+                    <div class="row col-lg-12">
+                        <div class="idcategoria form-group">
+
+                        </div>
+                        <div class="clavemarca form-group col-xl-2 col-lg-2 col-md-2">
+                            <label for="clave">Clave</label>
+                            <input class="form-control" type="text" placeholder="Clave de la marca" name="Clave" required />
+                        </div>
+                        <div class="nombremarca form-group col-xl-6 col-lg-6 col-md-6">
+                            <label for="nombre">Nombre</label>
+                            <input class="form-control" type="text" placeholder="Nombre de la marca" name="Nombre" required />
+                        </div>
+                        <div class="estatusmarca form-group col-xl-2 col-lg-2 col-md-2">
+                            <label for="Estatus">Estatus</label>
+                            <br />
+                            <input type="checkbox" name="Estatus" value="true" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="guardar-btn">Guardar</button>
+                        <button type="button" class="btn btn-danger cerrar" data-dismiss="modal" id="guardar-btn">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p>    </p>
+
+<!--Tabla para mostrar los datos insertados-->
+<div class="panel panel-default">
+    <div class="panel-heading text-center table table-striped">
+        <div class="row">
+            <div class="col-xs-3 col-lg-3 col-md-3 font-weight-bold">
+                Clave
+            </div>
+            <div class="col-xs-4 col-lg-4 col-md-4 font-weight-bold">
+                Nombre
+            </div>
+            <div class="col-xs-2 col-lg-2 col-md-2 font-weight-bold">
+                Estatus
+            </div>
+            <div class="col-xs-3 col-lg-3 col-md-3 font-weight-bold">
+
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <!--Aqui va un for o algo que recorrera los datos-->
+        <div class="tabla" id="tabla">
+            @foreach (var mar in Model)
+            {
+
+                <div class="row">
+                    <div class="col-xs-3 col-lg-3 col-md-3">
+                        @Html.DisplayFor(modelMar => mar.Clave)
+                    </div>
+                    <div class="col-xs-4 col-lg-4 col-md-4">
+                        @Html.DisplayFor(modelMar => mar.Nombre)
+                    </div>
+                    <div class="col-xs-2 col-lg-2 col-md-2">
+                        @Html.DisplayFor(modelMar => mar.Estatus)
+                    </div>
+                    <div class="col-xs-3 col-lg-3 col-md-3">
+                        <!--
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#editarcategoria">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#eliminarcategoria">
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                        </button>
+                        -->
+                        <button type="button" class="btn btn-success edit-btn" id="@mar.MarcaId" name="edit-btn"> Editar </button>
+                        <button type="button" class="btn btn-danger saveid-btn" id="@mar.MarcaId" name="saveid-btn">Eliminar</button>
+
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!--Modal para actualizar una marca-->
+<div class="modal fade" id="frmUpdMarca" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <form action="Update" method="post" id="ActualizarMarca">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close cerrarUpd" data-dismiss="modal"></button>
+                    <h1 class="modal-title">Editar marca</h1>
+                </div>
+                <div class="modal-body">
+                    <div class="row" id="updRowMarca">
+                        <div></div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="btnActualizar">Guardar</button>
+                    <button type="button" class="btn btn-danger cerrarUpd" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--Modal para eliminar una categoria-->
+<div class="modal fade" id="eliminarconfirmacion" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"></button>
+                <h1 class="modal-title">¡Espera!</h1>
+            </div>
+            <div class="modal-body">
+                <h4>¿Esta seguro que desea eliminar esta marca?</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success deletesbtn" id="deletes-btn">Si</button>
+                <button type="submit" class="btn btn-default" data-dismiss="modal" id="nodelete-btn">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    //<script>
+
+    $(document).ready(function(){
+        $(".cerrar").on('click',function(){
+            $("#agregarmarca").modal('hide');
+        });
+        $(".cerrarUpd").on('click', function(){
+            $("#frmUpdMarca").modal('hide');
+        });
+        $("#nodelete-btn").on('click', function(){
+            $("#eliminarconfirmacion").modal('hide');
+        });
+
+    //guardar datos desde el modal
+        $("#guardar-btn").on('click',function(){
+            var form = $("#AgragarMarca");
+            $.ajax({
+                url: '@Url.Action("Insert", "Marca")',
+                type: 'post',
+                cache: false,
+                data: form.serialize(),
+                success: function(result){
+                    $('#tabla div').remove();
+                    //Validar
+                    if(result)
+                    {
+                        $.each(result, function (i,valor)
+
+                    {
+                        var checked ='';
+                        if(valor.Estatus)
+                            checked = 'checked = "checked"';
+                        var html = "<div class='row'>"
+                            +"<div class='col-xs-3 col-lg-3 col-md-3'>"+valor.Clave+"</div>"
+                            +"<div class='col-xs-4 col-lg-4 col-md-4'>"+valor.Nombre+"</div>"
+                            +"<div class='col-xs-2 col-lg-2 col-md-2'><input disabled type='checkbox' value='false' "+checked+"  /></div>"
+                            +"<div class='col-xs-3 col-lg-3 col-md-3'>"
+                                + "<button type='button' class='btn btn-success edit-btn' id='"+ valor.MarcaId +"'> Editar </button>"
+                                + "<button type='button' class='btn btn-danger saveid-btn' id='"+ valor.MarcaId +"'>Eliminar</button>"
+                            +"</div>"
+                        + "</div>";
+                        $('#tabla').append(html);
+                    });
+                    $("#AgragarMarca")[0].reset();
+                    $("#agregarmarca").modal('hide');
+                }
+            }
+        });
+        return false;
+    });
+    //llamando al modal para editar el dato
+        $("#tabla").on('click','button.edit-btn', function(){
+            $.ajax({
+                url: '@Url.Action("Edit", "Marca")',
+                type: 'post',
+                cache: false,
+                data: {
+                    id : this.id,
+                },
+            success: function(result){
+                $('#updRowMarca div').remove();
+                if(result)
+                {
+                    var checked ='';
+                        if(result[0].Estatus)
+                            checked = 'checked = "checked"';
+                    var html ="<div class='clavecategoria form-group col-xl-2 col-lg-2 col-md-2'>"
+                                +"<input type='hidden' id='MarcaId' name='MarcaId'  value='"+ result[0].MarcaId +"'/>"
+                                +"<label for='clave'>Clave</label>"
+                                +"<input class='form-control' type='text' placeholder='Clave de la marca' name='Clave' value='"+ result[0].Clave +"'/>"
+                            +"</div>"
+                            +"<div class='nombrecategoria form-group col-xl-6 col-lg-6 col-md-6'>"
+                                +"<label for='nombre'>Nombre</label>"
+                                +"<input class='form-control' type='text' placeholder='Nombre de la marca' name='Nombre' value='"+ result[0].Nombre +"' />"
+                            +"</div>"
+                            +"<div class='estatuscategoria form-group col-xl-2 col-lg-2 col-md-2'>"
+                                +"<label for='Estatus'>Estatus</label>"
+                                +"<br />"
+                                +"<input type='checkbox' name='Estatus' value='true' "+checked+"/>"
+                            +"</div>";
+                    $('#updRowMarca').append(html);
+                    $("#frmUpdMarca").modal('show');
+                }
+            }
+        });
+    });
+    //Actualizar un registro
+  $("#btnActualizar").on('click',function(){
+            var form = $("#ActualizarMarca");
+            $.ajax({
+                url: '@Url.Action("Update", "Marca")',
+                type: 'post',
+                cache: false,
+                data: form.serialize(),
+                success: function(result){
+                    $('#tabla div').remove();
+                    //Validar
+                    if(result)
+                    {
+                        $.each(result, function (i,valor){
+                            var checked ='';
+                            if(valor.Estatus)
+                                checked = 'checked = "checked"';
+                            var html = "<div class='row'>"
+                            +"<div class='col-xs-3 col-lg-3 col-md-3'>"+valor.Clave+"</div>"
+                            +"<div class='col-xs-4 col-lg-4 col-md-4'>"+valor.Nombre+"</div>"
+                            +"<div class='col-xs-2 col-lg-2 col-md-2'><input disabled type='checkbox' value='false' "+checked+" /></div>"
+                            +"<div class='col-xs-3 col-lg-3 col-md-3'>"
+                                + "<button type='button' class='btn btn-success edit-btn' id='"
+                                + valor.MarcaId +"'> Editar </button>"
+                                + "<button type='button' class='btn btn-danger saveid-btn' id='"
+                                + valor.MarcaId +"'>Eliminar</button>"
+                            +"</div>"
+                        + "</div>";
+                            $('#tabla').append(html);
+                        });
+                        $("#frmUpdMarca").modal('hide');
+                     }
+                }
+            });
+            return false;
+       });
+    //borrar un elemento
+        $("#tabla").on('click','button.saveid-btn', function(){
+            var ids = this.id;
+            console.log(`id : ${typeof(ids)}`);
+            $('.deletesbtn').data("id", ids);
+            $("#eliminarconfirmacion").modal('show');
+
+        });
+        $("#eliminarconfirmacion").on('click', 'button.deletesbtn', function () {
+
+            $("#eliminarconfirmacion").modal('hide');
+
+            $.ajax({
+                url: '@Url.Action("Delete", "Marca")',
+                type: 'post',
+                cache: false,
+                data: {
+                           id : $('.deletesbtn').data("id"),
+                    },
+                success: function(result){
+                        $("#"+ result).parent().parent().remove();
+                    }
+                });
+                return false;
+        });
+  });
+    //</script>
+}

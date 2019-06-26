@@ -1,0 +1,53 @@
+﻿
+@{
+    ViewBag.Title = "Crearcontacto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<CENTER><h2>CONTACTO</h2></CENTER>
+<center><h5><b>Agrega datos</b></h5></center>
+<button>@Html.ActionLink("CANCELAR", "Index")</button>
+<div class="form-group row">
+    <div class="col-md-3">
+        <h5><b>TITULO</b></h5>
+        <input class="form-control" id="TITULO" type="text" required/>
+    </div>
+   
+    <div class="col-md-4">
+        <h5><b>NOMBRE</b></h5>
+        <input class="form-control" id="NOMBRE" type="text" required/>
+    </div>
+
+    <div class="col-md-4">
+        <h5><b>APELLIDO</b></h5>
+        <input class="form-control" id="APELLIDO" type="text" required/>
+    </div>
+
+    <div class="col-md-3">
+        <h5><b>TELEFONO</b></h5>
+        <input class="form-control" id="TELEFONO" type="text" required/>
+    </div>
+    <div class="col-md-4">
+        <h5><b>EXTENSION</b></h5>
+        <input class="form-control" id="EXTENSION" type="text" required/>
+    </div>
+
+    <div class="col-md-4">
+        <h5><b>CELULAR</b></h5>
+        <input class="form-control" id="CELULAR" type="text" required/>
+    </div>
+
+    <div class="col-md-3">
+        <h5><b>CORREO ELECTRONICO</b></h5>
+        <input class="form-control" id="CORREOELECTRONICO" type="email" required/>
+    </div>
+    <div class="col-md-4">
+        <h5><b>PUESTO</b></h5>
+        <input class="form-control" id="PUESTO" type="number" required/>
+    </div>
+    <div class="col-md-4">
+        <h5><b>ESTATUS</b></h5><input id="ESTATUS" type="checkbox" required/>
+    </div>
+</div>
+<button class="btn btn-success">GUARDAR</button>
+

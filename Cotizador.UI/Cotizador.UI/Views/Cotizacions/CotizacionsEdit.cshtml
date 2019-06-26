@@ -1,0 +1,569 @@
+﻿@model IEnumerable<Cotizador.UI.Models.Cotizacion>
+@{
+    ViewBag.Title = "Cotizaciones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <style>
+        .mr {
+            margin-right: 15px;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .fr {
+            float: right;
+        }
+
+        .no-pad {
+            padding-top: 2px !important;
+            padding-bottom: 0px !important;
+        }
+
+        .no-border {
+            border: 0 !important;
+        }
+
+        .bg-grey {
+            background-color: #f9f9f9 !important;
+        }
+
+        .text-sm {
+            font-size: small;
+        }
+
+        #totales tr td:nth-child(1) {
+            font-weight: bold;
+            text-align: end;
+            padding-right: 8px;
+        }
+
+        .table.table-striped thead th {
+            outline: 1px solid #dddddd;
+        }
+
+        input[type="date"].form-control {
+            line-height: inherit !important;
+        }
+
+        #fechaReg {
+            padding-left: 4em;
+            padding-right: 4em;
+        }
+
+        .vertical-center tr td {
+            display: table-cell;
+            vertical-align: middle !important;
+        }
+
+		.input-group-addon.custom {
+			padding: 2.5px 5px !important;
+		}
+    </style>
+}
+<div id="app">
+    <!-- The main container for VueJS -->
+    <div class="container-fluid">
+        <h1> @ViewBag.Title </h1>
+
+        <form id="cotForm" action="/">
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label for="proyecto">Proyecto</label>
+                    <input type="text" class="form-control" name="proyecto" id="proyecto" aria-describedby="ayuda-pro" v-model="proyecto">
+                </div>
+                <!-- <div class="form-group col-md-3 pt-0" style="padding-top: 24px !important;">
+                <button id="tipoCambio" type="button" class="btn btn-primary fr">
+                Tipo de cambio <span class="badge">$18.82</span>
+                </button>
+                </div> -->
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="cliente">Cliente</label>
+                    <select v-model="selectedCliente" v-on:change="clienteChange" name="cliente" id="cliente" class="form-control" required>
+                        <option value="" selected disabled>Selecione una opci&oacute;n...</option>
+                        <option v-for="cliente in clientes" :value="cliente.ClienteId"> {{ cliente.Nombre }} {{ cliente.Apellidos }} </option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="contacto">Contacto</label>
+                    <select v-model="selectedContacto" name="contacto" id="contacto" class="form-control" :disabled=contactoDisabled required>
+                        <option value="" selected disabled>Selecione una opci&oacute;n...</option>
+                        <option v-for="contacto in contactos" :value="contacto.ContactoClienteId">{{ contacto.Nombre }} {{ contacto.Apellidos }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>Moneda</label>
+                    <div style="">
+                        @foreach (var moneda in ViewBag.Monedas)
+                        {
+                            <input type="radio" id="moneda" name="moneda" v-model="moneda" value="@moneda.MonedaId" />
+                            <label class="mr" for="moneda">@moneda.Clave</label>
+                        }
+                    </div>
+                    <label><small>Nota: seleccione su moneda para realizar la cotizaci&oacute;n con el tipo de cambio de su moneda</small></label>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="fechaReg">Fecha de registro</label>
+                    <div class='input-group date' id="fechaReg">
+                        <input type='date' class="form-control" name="fecha" id="fecha" v-model="fecha" required/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <button id="agregarProducto" type="button" class="btn btn-success" data-toggle="modal" data-target="#modalProductos">
+                        <span class="fa fa-plus"></span>  Agregar producto
+                    </button>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <table id="tablaCotizaciones" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th class="bold">P</th>
+                                <th class="bold">Cantidad</th>
+                                <th class="bold">Marca</th>
+                                <th width="10%" class="bold">Modelo</th>
+                                <th class="bold">Descripci&oacute;n</th>
+                                <th width="11%" class="bold">Precio unitario</th>
+                                <th width="7%" class="bold">Margen</th>
+                                <th width="10%" class="bold">Precio total</th>
+                                <th width="10%" class="bold">Opciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="vertical-center" id="cuerpoTblCotizaciones">
+                            <!-- Inicio de Fila de Productos -->
+
+                            <tr v-for="(product, index) in onCotizacion">
+                                <td>{{ index+1 }}</td>
+                                <td>
+                                    <input class="form-control" type="number" min="1" step="1"
+                                           v-model="cantidades[product.ProductoId]"
+                                           :disabled=!allowEdits[product.ProductoId] />
+                                </td>
+                                <td> {{ product.Marca }} </td>
+                                <td> {{ product.modelo }} </td>
+                                <td> {{ product.DescripcionCorta }} </td>
+								<td>
+									<div class="input-group">
+										<span class="input-group-addon custom">
+											$
+										</span>
+										<input type="number" step="0.1" class="form-control" name="precio" :id="product.ProductoId"
+											   v-model="precios[product.ProductoId]" :min="minPrices[product.ProductoId]"
+											   v-on:input="checkValidity(product.ProductoId)" v-on:blur="checkMin(product.ProductoId)"
+											   :disabled=!allowEdits[product.ProductoId] />
+									</div>
+								</td>
+                                <td> {{ product.Margen ? product.Margen * 100 : 0 }}% </td>
+								<td>${{ getCantidad(product.ProductoId) * precios[product.ProductoId] }}</td>
+                                <td class="text-center no-pad vertical-center">
+                                    <a href="javascript:void(0);" class="btn btn-sm" 
+									   v-bind:class="[!allowEdits[product.ProductoId] ? 'btn-success' : 'btn-primary' ]" 
+									   v-on:click="toggleEdit(product.ProductoId)">
+									<i class="fa" v-bind:class="[!allowEdits[product.ProductoId] ? 'fa-edit' : 'fa-save' ]"></i>
+									</a>
+                                    <a href="javascript:void(0);" class="btn btn-danger btn-sm" v-on:click="quitFromCotizacion(product.ProductoId)"><i class="fa fa-times"></i></a>
+                                </td>
+                            </tr>
+
+                            <!-- Final de Fila de Productos -->
+                            <!-- Inicio de Fila de Totales -->
+                            <tr class="no-border" id="results">
+                                <td colspan="6"></td>
+                                <td colspan="2" class="bg-grey text-sm">
+                                    <table id="totales">
+                                        <tbody>
+                                            <col width="80%">
+                                            <col width="20%">
+                                            <tr>
+                                                <td>Subtotal MN: </td>
+                                                <td id="subtotal">${{Subtotal}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>IVA: </td>
+                                                <td id="iva">${{IVA}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Total: </td>
+                                                <td id="total">${{Total}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <!-- Final de Fila de Totales -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-9"></div>
+                <div class="form-group col-md-3">
+                    <button id="saveCot" type="button" v-on:click="saveCotizacion" class="btn btn-success fr">Guardar cotizaci&oacute;n</button>
+                    <button class="btn btn-danger fr" type="button" onclick="location.href='/Cotizacions'">Volver</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal fade" id="modalProductos">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <div class="row">
+                        <div class="col-md-9">
+                            <h2 class="modal-title">Agregar productos</h2>
+                        </div>
+                        <div class="col-md-2" style="margin-top: 0.7em;">
+                            <i style="font-size: 2em;" class="fa fa-shopping-cart">
+                                <span class="badge" style="margin-bottom: 1.2em;">{{onCotizacion.length}}</span>
+                            </i>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <form action="/">
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label for="mCategoria">Categor&iacute;a: </label>
+                                    <select v-on:change="categoriaChange" v-model="selectedCategory" name="mCategoria" id="mCategoria" class="form-control">
+                                        <option value="" selected disabled>Selecione una categor&iacute;a...</option>
+                                        <option v-for="categoria in categorias" name="ids" :value="categoria.CategoriaId" class="checkbox">
+                                            {{ categoria.Nombre }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <table id="tablaProductos" class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th class="bold"></th>
+                                                <th class="bold">Clave</th>
+                                                <th class="bold">Nombre</th>
+                                                <th class="bold">Marca</th>
+                                                <th class="bold">Descripci&oacute;n</th>
+                                                <th class="bold">Precio</th>
+                                                <th class="bold">Categor&iacute;a</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="product in products">
+                                                <td>
+                                                    <button title="Añadir" type="button" class="btn btn-sm btn-success" :id="product.Clave" v-on:click="putOnCotizacion(product.ProductoId)">
+                                                        <i class="fa fa-cart-plus" style="font-size: 15px;"></i>
+                                                    </button>
+                                                </td>
+                                                <td> {{ product.Clave }} </td>
+                                                <td> {{ product.Nombre }} </td>
+                                                <td> {{ product.Marca }} </td>
+                                                <td> {{ product.DescripcionCorta }} </td>
+												<td>${{ product.Precio ? product.Precio : 0 }}</td>
+                                                <td> {{ product.Categoria }} </td>
+                                            </tr>
+                                            <tr v-if="products.length <= 0 && selectedCategory != ''">
+                                                <td colspan="7" class="text-center">No hay datos disponibles</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section ImportScripts {
+    <script src="~/Scripts/vue.js"></script>
+    <script src="~/Scripts/sweetalert2@8.js"></script>
+    <script>
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2500
+    });
+
+    var moneyReGex = /\d(?=(\d{3})+\.)/g;
+    var app = new Vue({
+        el: '#app',
+        data: {
+            Iva: 0,
+            total: 0,
+            fecha: '',
+            valIva: 0,
+			moneda: '',
+			precios: {},
+            subtotal: 0,
+            proyecto: '',
+            clientes: [],
+            products: [],
+			contactos: [],
+			minPrices: {},
+            cantidades: {},
+            allowEdits: {},
+            categorias: [],
+            cotizacionId: '',
+            onCotizacion: [],
+            selectedCliente: '',
+            allowContacto: false,
+            selectedCategory: '',
+            selectedContacto: '',
+            productsByCategory: {}
+        },
+        created: function () {
+            let el = this;
+            @{ 
+                string str = Ajax.JavaScriptStringEncode(ViewBag.Productos as string);
+            }
+            let cotizacion = JSON.parse('@Html.Raw(Json.Encode(ViewBag.Cotizacion))').Data[0];
+            el.categorias = JSON.parse('@Html.Raw(Json.Encode(ViewBag.Categorias))').Data;
+            el.clientes = JSON.parse('@Html.Raw(Json.Encode(ViewBag.Clientes))').Data;
+            el.valIva = @Html.Raw(ViewBag.IVA);
+            el.valIva /= 100;
+            el.onCotizacion = JSON.parse(`@MvcHtmlString.Create(str)`.replace(/\\\"/g, "''").replace(/\s/g, " "));
+            el.cotizacionId = cotizacion.CotizacionId;
+            el.selectedCliente = cotizacion.ClienteId;
+            el.fecha = cotizacion.Fecha;
+            el.Iva = cotizacion.IVA;
+            el.moneda = cotizacion.MonedaId;
+            el.proyecto = cotizacion.Proyecto;
+            el.subtotal = cotizacion.Subtotal;
+            el.total = cotizacion.Total;
+			el.onCotizacion.forEach(p => {
+				var minPrecio = (1 + (p.Margen ? p.Margen : 100)) * (p.Costo ? p.Costo : 100);
+				if (el.cantidades[p.ProductoId] === undefined) {
+					el.$set(el.precios, p.ProductoId, p.Precio)
+					el.$set(el.minPrices, p.ProductoId, minPrecio);
+                    el.$set(el.cantidades, p.ProductoId, p.Cantidad);
+                    el.$set(el.allowEdits, p.ProductoId, false);
+                }
+            });        
+            let ncategorias = [...new Set(el.onCotizacion.map(v => v.CategoriaId))]
+            el.selectedCategory = ncategorias.length > 0 ? ncategorias[0] : '';
+            setTimeout(function () {
+                el.clienteChange();
+                el.selectedContacto = cotizacion.ContactoClienteId;
+                el.fetchCategorias(ncategorias);
+            }, 600);
+            //console.log(ncategorias);
+        },
+        computed: {
+            contactoDisabled: function () {
+                return !this.allowContacto;
+            },
+            Subtotal: function () {
+                let el = this;
+                el.subtotal = 0;
+				el.onCotizacion.forEach(item => {
+					const id = item.ProductoId;
+					el.subtotal += (el.precios[id] ? el.precios[id] : 100) * el.getCantidad(id)
+                })
+                return el.subtotal.toFixed(2).replace(moneyReGex, '$&,');
+            },
+            IVA: function () {
+                this.Iva = ((this.subtotal * (1 + this.valIva)) - this.subtotal);
+                return this.Iva.toFixed(2).replace(moneyReGex, '$&,');
+            },
+            Total: function () {
+                this.total = (this.subtotal + this.Iva);
+                return this.total.toFixed(2).replace(moneyReGex, '$&,');
+            }
+        },
+        methods: {
+            categoriaChange: function () {
+                let el = this;
+                let categoria = el.categorias.find(item => item.CategoriaId == el.selectedCategory).Nombre;
+                if (el.productsByCategory[categoria] == undefined) {
+                    $.post('/Cotizacions/getProductos', {
+                        CategoriaId: el.selectedCategory
+                    })
+                    .done(function (data) {
+                        el.productsByCategory[categoria] = data;
+                        el.products = el.productsByCategory[categoria].filter(item => el.onCotizacion.find(p => p.ProductoId == item.ProductoId) === undefined);
+                    })
+                    .fail(function (error) {
+                        el.products = [];
+                        console.error(error);
+                    });
+                } else {
+                    el.products = el.productsByCategory[categoria].filter(item => el.onCotizacion.find(p => p.ProductoId == item.ProductoId) === undefined);
+                }
+            },
+            clienteChange: function () {
+                let el = this;
+                $.post('/Cotizacions/getContactos', {
+                    ClienteId: el.selectedCliente
+                })
+                .done(function (data) {
+                    if (data.length > 0) {
+                        el.allowContacto = true;
+                        el.contactos = data;
+                    } else {
+                        el.contactos = [];
+                        el.allowContacto = false;
+                    }
+                })
+                .fail(function (error) {
+                    el.contactos = [];
+                    el.allowContacto = false;
+                    console.error(error);
+                });
+            },
+            fetchCategorias: function (categorias) {
+                if (categorias) {
+                    let el = this;
+                    categorias.forEach(cat => {
+                        let categoria = el.categorias.find(item => item.CategoriaId == cat).Nombre;
+                        if (el.productsByCategory[categoria] == undefined) {
+                            $.post('/Cotizacions/getProductos', {
+                                CategoriaId: cat
+                            })
+                            .done(function (data) {
+                                el.productsByCategory[categoria] = data;
+                            })
+                            .fail(function (error) {
+                                console.error(error);
+                            });
+                        }
+                    })
+                }
+            },
+            putOnCotizacion: function (productId) {
+                let el = this;
+				let producto = el.products.find(item => item.ProductoId == productId);
+				let minPrecio = (1 + (producto.Margen ? producto.Margen : 100)) * (producto.Costo ? producto.Costo : 100);
+                let categoria = el.categorias.find(item => item.CategoriaId == el.selectedCategory);
+                el.onCotizacion.push(producto);
+                el.onCotizacion.forEach(p => {
+					if (el.cantidades[p.ProductoId] === undefined) {
+						el.$set(el.precios, p.ProductoId, p.Precio)
+						el.$set(el.minPrices, p.ProductoId, minPrecio);
+                        el.$set(el.cantidades, p.ProductoId, 1);
+                        el.$set(el.allowEdits, p.ProductoId, false);
+                    }
+                });
+                el.products = el.productsByCategory[categoria.Nombre].filter(item => el.onCotizacion.find(p => p.ProductoId == item.ProductoId) === undefined);
+            },
+            quitFromCotizacion: function (productId) {
+                let el = this;
+                let categoria = el.categorias.find(item => item.CategoriaId == el.selectedCategory);
+                el.onCotizacion = el.onCotizacion.filter(item => item.ProductoId != productId);
+                el.$delete(el.cantidades, productId);
+                el.$delete(el.allowEdits, productId);
+                el.products = el.productsByCategory[categoria.Nombre].filter(item => el.onCotizacion.find(p => p.ProductoId == item.ProductoId) === undefined);
+            },
+            getCantidad: function (productId) {
+                let el = this;
+                return parseInt(el.cantidades[productId]);
+            },
+            toggleEdit: function (productId) {
+                this.allowEdits[productId] = !this.allowEdits[productId];
+            },
+            saveCotizacion: function () {
+				let el = this;
+				saveBtn = document.getElementById("saveCot");
+				saveBtn.disabled = true;
+				if (!document.getElementById("cotForm").checkValidity()) {
+					document.getElementById("cotForm").reportValidity();
+					saveBtn.disabled = false;
+					return;
+				}
+				let subtotal = 0, total = 0, iva = 0;
+				el.onCotizacion.forEach(p => {
+					const id = p.ProductoId;
+					el.checkMin(id);
+					const precio = el.precios[id];
+					p.Cantidad = el.getCantidad(id);
+					p.Precio = precio;
+					subtotal += (precio ? precio : 100) * el.getCantidad(id);
+				})
+				iva = subtotal * el.valIva;
+				total = subtotal + iva;
+                $.post('/Cotizacions/updateCotizacion', {
+                    CotizacionId: el.cotizacionId,
+                    Proyecto: el.proyecto,
+                    ClienteId: el.selectedCliente,
+                    ContactoClienteId: el.selectedContacto,
+                    MonedaId: el.moneda,
+                    Fecha: el.fecha,
+                    Partidas: el.onCotizacion,
+                    Total: total,
+                    Subtotal: subtotal,
+                    IVA: iva
+                })
+                .done(function (data) {
+                    console.log(data);
+                    if (data == 200) {
+                        setTimeout(function () {
+                            location.href = "/Cotizacions";
+                        }, 2500);
+                        Toast.fire({
+                            type: 'success',
+                            title: 'Guardada correctamente'
+                        })
+                    } else {
+                        Toast.fire({
+                            type: 'error',
+                            title: 'No se pudo guardar'
+                        })
+                    }
+                })
+                .fail(function (error) {
+                    console.error(error)
+                    Toast.fire({
+                        type: 'error',
+                        title: 'Error al guardar la cotización'
+                    })
+                });
+			},
+			checkValidity: function (id) {
+				let el = this;
+				var elem = document.getElementById(id);
+				if (el.precios[id] < el.minPrices[id]) {
+					elem.setCustomValidity(`El menor precio posible para este artículo es: $${el.minPrices[id]}`);
+					elem.parentNode.classList.add("has-error");
+					elem.reportValidity();
+				} else {
+					elem.setCustomValidity("");
+					if (elem.parentNode.classList.contains("has-error"))
+						elem.parentNode.classList.remove("has-error");
+				}
+			},
+			checkMin: function (id) {
+				let el = this;
+				var elem = document.getElementById(id);
+				if (el.precios[id] < el.minPrices[id]) {
+					el.precios[id] = el.minPrices[id];
+					elem.setCustomValidity("");
+					if (elem.parentNode.classList.contains("has-error"))
+						elem.parentNode.classList.remove("has-error");
+				}
+			}
+        }
+    })
+    </script>
+}

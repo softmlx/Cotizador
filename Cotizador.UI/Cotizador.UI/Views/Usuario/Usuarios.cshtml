@@ -1,0 +1,175 @@
+﻿@model IEnumerable<Cotizador.UI.Models.BitUser>
+
+@{
+    ViewBag.Title = "Usuarios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#insUsuarios" id="btnNuevo">Nuevo</button>
+    @Html.Partial("insUsuarios")
+    @Html.Partial("updUsuarios")
+
+    <div class="row">
+        <div class="col-md-2">Usuario</div>
+        <div class="col-md-2">Email</div>
+        <div class="col-md-2">Teléfono</div>
+        <div class="col-md-2">Información Adicional</div>
+    </div>
+    <div class="tabla" id="tabla">
+        @foreach (var iteam in Model)
+        {
+            <div class="row">
+                <div class="col-md-2">@Html.DisplayFor(modelIteam => iteam.UserName)</div>
+                <div class="col-md-2">@Html.DisplayFor(modelIteam => iteam.Email)</div>
+                <div class="col-md-2">@Html.DisplayFor(modelIteam => iteam.PhoneNumber)</div>
+                <div class="col-md-2">@Html.DisplayFor(modelIteam => iteam.AdditionalInfo)</div>
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-success btnEdit" id="@iteam.BitUserId" name="btnEdit">Editar</button>
+                    <button type="button" class="btn btn-danger btnDelete" id="@iteam.BitUserId" name="btnDelete">Eliminar</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts{
+    $(document).ready(function()
+    {
+        $(".cerrar").on('click',function()
+        {
+            $("#insUsuarios").modal('hide');
+        });
+
+        $(".cerrarUpd").on('click',function()
+        {
+            $("#updUsuario").modal('hide');
+        });
+
+        //Llamada al boton Editar del Modal Upd
+        $("#tabla").on('click','button.btnEdit', function()
+        {
+            $.ajax({
+                url: '@Url.Action("Edit", "Usuario")',
+                type: 'post',
+                cache: false,
+                data: {id : this.id,},
+                success: function(result)
+                {
+                    $('#UpdRowUsuario div').remove();
+                    if(result)
+                    {
+                        $.each(result, function (i,valor)
+                        {
+                            var html = "<div class='row'>"
+                                            +"<input type='hidden' id='BitUserId' name='BitUserId'  value='"+ result[0].BitUserId +"'>"
+                                            +"<div class='col-lg-6'>"
+                                                +"<label>Nombre de Usuario</label>"
+                                                +"<div class='input-group'>"
+                                                    +"<div class='input-group-addon'>"
+                                                        +"<span class='input-group-text'>&commat;</span>"
+                                                    +"</div>"
+                                                    +"<input type='text' placeholder='Nombre de Usuario' class='form-control' name='UserName' value='"+ result[0].UserName +"'>"
+                                                +"</div>"
+                                            +"</div>"
+                                            +"<div class='col-lg-6'>"
+                                                +"<label>Teléfono Celular</label>"
+                                                +"<input type='text' class='form-control' placeholder='Teléfono Celular' name='PhoneNumber' value='"+ result[0].PhoneNumber +"'>"
+                                            +"</div>"+
+                                        "</div>"
+                                        +"<div class='row'>"
+                                            +"<div class='col-lg-12'>"
+                                                +"<label>Email</label>"
+                                                +"<input type='email' class='form-control' placeholder='Email' name='Email' value='"+ result[0].Email +"'>"
+                                            +"</div>"+
+                                        "</div>"
+                                        +"<div class='row'>"
+                                            +"<div class='col-lg-12'>"
+                                                +"<label>Información Adicional</label>"
+                                                +"<input type='text' class='form-control' placeholder='Información Adicional' name='AdditionalInfo' value='"+ result[0].AdditionalInfo +"'>"
+                                            +"</div>"+
+                                        "</div>"
+                                        +"<div class='row'>"
+                                            +"<div class='col-lg-6'>"
+                                                +"<label>Tipos de Roles</label>"
+                                            +"</div>"+
+                                        "</div>"
+                                        $.each(result[0].BitUserRole, function(index, valor)
+                                        {
+                                            $("#"+result[0].BitUserRole[index].BitRoleId)[0].checked = true;
+                                        });
+                            $('#UpdRowUsuario').append(html);
+                            $("#updUsuario").modal('show');
+                        });
+                    }
+                }
+            });
+        });
+        $("#btnActualizar").on('click',function()
+        {
+            var form = $("#frmUpdUser");
+            $.ajax({
+                url: '@Url.Action("Update", "Usuario")',
+                type: 'post',
+                cache: false,
+                data: form.serialize(),
+                success: function(result)
+                {
+                    $('#tabla div').remove();
+                    if(result)
+                    {
+                        $.each(result,function (i,valor)
+                        {
+                            var html = "<div class='row'>"
+                                            +"<div class='col-md-2'>"+valor.UserName+"</div>"
+                                            +"<div class='col-md-2'>"+valor.Email+"</div>"
+                                            +"<div class='col-md-2'>"+valor.PhoneNumber+"</div>"
+                                            +"<div class='col-md-2'>"+valor.AdditionalInfo+"</div>"
+                                            +"<div class='col-md-4'>"
+                                              +"<button type='button' class='btn btn-success btnEdit' id='"+valor.BitUserId+"' name='btnEdit'>Editar</button>"
+                                              +"<button type='button' class='btn btn-danger btnDelete' id='"+valor.BitUserId+"'>Eliminar</button>"
+                                            +"</div>"+
+                                        "</div>";
+                            $('#tabla').append(html);
+                        });
+                    }
+                }
+            });
+            $("#updUsuario").modal('hide');
+            return false;
+        });
+        //Llamada al boton Guardar del Modal Insertar
+        $("#btnGuardar").on('click',function(){
+            var form = $("#frmNewUser");
+            $.ajax({
+                url: '@Url.Action("Insert", "Usuario")',
+                type: 'post',
+                cache: false,
+                data: form.serialize(),
+                success: function(result)
+                {
+                    $('#tabla div').remove();
+                    if(result)
+                    {
+                        $.each(result,function (i,valor)
+                        {
+                            var html = "<div class='row'>"
+                                            +"<div class='col-md-2'>"+valor.UserName+"</div>"
+                                            +"<div class='col-md-2'>"+valor.Email+"</div>"
+                                            +"<div class='col-md-2'>"+valor.PhoneNumber+"</div>"
+                                            +"<div class='col-md-2'>"+valor.AdditionalInfo+"</div>"
+                                            +"<div class='col-md-4'>"+
+                                              "<button type='button' class='btn btn-success btnEdit' id='"+valor.BitUserId+"' name='btnEdit'>Editar</button>"+
+                                              "<button type='button' class='btn btn-danger btnDelete' id='"+valor.BitUserId+"'>Eliminar</button>"
+                                            +"</div>"+
+                                        "</div>";
+                            $('#tabla').append(html);
+                        });
+                    }
+                }
+            });
+            $("#insUsuarios").modal('hide');
+            return false;
+        });
+    });
+}
